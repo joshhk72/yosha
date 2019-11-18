@@ -91,9 +91,20 @@
   !*** ./src/index.js ***!
   \**********************/
 /*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("const Player = __webpack_require__(/*! ./player.js */ \"./src/player.js\");\n\ndocument.addEventListener(\"DOMContentLoaded\", function () {\n  const canvas = document.getElementById(\"asteroids-canvas\");\n  const ctx = canvas.getContext('2d');\n});\n\n//# sourceURL=webpack:///./src/index.js?");
+
+/***/ }),
+
+/***/ "./src/player.js":
+/*!***********************!*\
+  !*** ./src/player.js ***!
+  \***********************/
+/*! no static exports found */
 /***/ (function(module, exports) {
 
-eval("console.log(\"Webpack is working!\");\n\n//# sourceURL=webpack:///./src/index.js?");
+eval("const CONSTANTS = {\n  ticksPerFrame: 0,\n};\n\nconst SPRITES = {\n  walk1: [0, 0, 26, 26],\n};\n\nclass HitboxObject {\n  constructor(options) {\n    this.pos = options.pos;\n    this.vel = options.vel;\n    this.width = options.width;\n    this.height = options.height;\n    this.sprites = new Image();\n    this.sprites.src = './assets/sprites/yoshi.png';\n\n    // http://www.williammalone.com/articles/create-html5-canvas-javascript-sprite-animation/\n    this.frame = 0;\n    this.tickCount = 0;\n    this.ticksPerFrame = CONSTANTS.ticksPerFrame;\n  }\n\n  draw(ctx) {\n    ctx.clearRect(0,0,900,400);\n    this.renderSprite(ctx);\n  }\n\n  render(ctx) {\n    this.selectSprite(ctx, )\n  }\n\n  selectSprite(ctx, coordinates, size, spritesImg) {\n    // ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);\n    // s is source, d is destination\n    ctx.drawImage(spritesImg, \n      coordinates[0], coordinates[1], \n      size[0], size[1],\n      this.pos[0], this.pos[1],\n      this.width, this.height);\n  }\n\n  collided(hitbox) {\n  }\n\n  isHit(projectile) {\n  }\n}\n\nmodule.exports = HitboxObject;\n\n//# sourceURL=webpack:///./src/player.js?");
 
 /***/ })
 
