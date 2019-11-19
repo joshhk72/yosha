@@ -1,7 +1,12 @@
+const Vector = require('./vector');
+
 const CONSTANTS = {
-  WIDTH: 55,
-  HEIGHT: 75,
-  TICKS_PER_FRAME: 0,
+  WIDTH: 50,
+  HEIGHT: 68,
+  TICKS_PER_FRAME: 6,
+  STARTING_VEL: new Vector(0, 0),
+  STARTING_POS: new Vector(430, 380),
+  MAX_FRAME_COUNT: 7,
 };
 
 const FRONT_SPRITE_POS = {
@@ -44,10 +49,10 @@ const SPRITE_SIZE = {
 
 
 class Player {
-  constructor(options) {
-    this.pos = options.pos;
-    this.vel = options.vel;
-    this.front = true; // facing front at the start
+  constructor() {
+    this.type = "player"; // This is for later, when levels start tracking 'actors' by types...
+    this.pos = CONSTANTS.STARTING_POS;
+    this.vel = CONSTANTS.STARTING_VEL;
     this.width = CONSTANTS.WIDTH;
     this.height = CONSTANTS.HEIGHT;
     this.frontSprites = new Image();
@@ -55,18 +60,93 @@ class Player {
     this.frontSprites.src = '../assets/sprites/yoshi.png';
     this.backSprites.src = '../assets/sprites/back-yoshi.png';
     
+    this.facingFront = true; // facing front at the start
+    this.wasMoving = 0;
+    this.movingTo = 0;
+    this.jumping = false;
+    
     // http://www.williammalone.com/articles/create-html5-canvas-javascript-sprite-animation/
-    this.frame = 0;
+    this.frameCount = 0;
+    this.maxFrameCount = CONSTANTS.MAX_FRAME_COUNT;
     this.tickCount = 0;
     this.ticksPerFrame = CONSTANTS.TICKS_PER_FRAME;
   }
 
-  draw(ctx) {
-    this.render(ctx);
+  static create() {
+    return new Player();
   }
 
-  render(ctx) {
-    this.selectSprite(ctx, BACK_SPRITE_POS['walk1'], SPRITE_SIZE['walk'], this.backSprites);
+  
+  moveTo(num) {
+    this.movingTo = num;
+  }
+
+  draw(ctx) {
+    if (this.movingTo === 0) {
+      return this.facingFront ? this.selectSprite(ctx, FRONT_SPRITE_POS['stand'], SPRITE_SIZE['stand'], this.frontSprites)
+        : this.selectSprite(ctx, BACK_SPRITE_POS['stand'], SPRITE_SIZE['stand'], this.backSprites);
+    } else if (this.movingTo > 0) {
+      switch(this.frameCount) {
+        case 0:
+          return this.selectSprite(ctx, FRONT_SPRITE_POS['walk1'], SPRITE_SIZE['walk'], this.frontSprites);
+        case 1:
+          return this.selectSprite(ctx, FRONT_SPRITE_POS['walk2'], SPRITE_SIZE['walk'], this.frontSprites);
+        case 2:
+          return this.selectSprite(ctx, FRONT_SPRITE_POS['walk3'], SPRITE_SIZE['walk'], this.frontSprites);
+        case 3:
+          return this.selectSprite(ctx, FRONT_SPRITE_POS['walk4'], SPRITE_SIZE['walk'], this.frontSprites);
+        case 4:
+          return this.selectSprite(ctx, FRONT_SPRITE_POS['walk5'], SPRITE_SIZE['walk'], this.frontSprites);
+        case 5:
+          return this.selectSprite(ctx, FRONT_SPRITE_POS['walk6'], SPRITE_SIZE['walk'], this.frontSprites);
+        case 6:
+          return this.selectSprite(ctx, FRONT_SPRITE_POS['walk7'], SPRITE_SIZE['walk'], this.frontSprites);
+        case 7:
+          return this.selectSprite(ctx, FRONT_SPRITE_POS['walk8'], SPRITE_SIZE['walk'], this.frontSprites);
+      }
+    } else if (this.movingTo < 0) {
+      switch (this.frameCount) {
+        case 0:
+          return this.selectSprite(ctx, BACK_SPRITE_POS['walk1'], SPRITE_SIZE['walk'], this.backSprites);
+        case 1:
+          return this.selectSprite(ctx, BACK_SPRITE_POS['walk2'], SPRITE_SIZE['walk'], this.backSprites);
+        case 2:
+          return this.selectSprite(ctx, BACK_SPRITE_POS['walk3'], SPRITE_SIZE['walk'], this.backSprites);
+        case 3:
+          return this.selectSprite(ctx, BACK_SPRITE_POS['walk4'], SPRITE_SIZE['walk'], this.backSprites);
+        case 4:
+          return this.selectSprite(ctx, BACK_SPRITE_POS['walk5'], SPRITE_SIZE['walk'], this.backSprites);
+        case 5:
+          return this.selectSprite(ctx, BACK_SPRITE_POS['walk6'], SPRITE_SIZE['walk'], this.backSprites);
+        case 6:
+          return this.selectSprite(ctx, BACK_SPRITE_POS['walk7'], SPRITE_SIZE['walk'], this.backSprites);
+        case 7:
+          return this.selectSprite(ctx, BACK_SPRITE_POS['walk8'], SPRITE_SIZE['walk'], this.backSprites);
+        }
+    }
+  }
+
+  step() {
+    // Increment ticks if continuously moving
+    if (this.wasMoving === this.movingTo) {
+      this.tickCount += 1;
+    } else {
+      this.tickCount = 0;
+      this.frameCount = 0;
+    }
+
+    // Increment frames if enough ticks are reached on the same action
+    if (this.tickCount > this.ticksPerFrame) {
+      this.tickCount = 0;
+      this.frameCount += 1;
+      if (this.frameCount === this.maxFrameCount) this.frameCount = 0; 
+    }
+
+    // If the player isn't standing still, then update 'front' status
+    if (this.movingTo !== 0) this.facingFront = this.movingTo > 0;
+
+    // Update this for checks done during the next step
+    this.wasMoving = this.movingTo;
   }
 
   selectSprite(ctx, coordinates, size, spritesImg) {
@@ -75,7 +155,7 @@ class Player {
     ctx.drawImage(spritesImg, 
       coordinates[0], coordinates[1], 
       size[0], size[1],
-      this.pos[0], this.pos[1],
+      this.pos.x, this.pos.y,
       this.width, this.height);
   }
 

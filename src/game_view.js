@@ -9,6 +9,7 @@ class GameView {
     this.over = false;
     this.paused = false;
     this.render = this.render.bind(this);
+    this.step = this.step.bind(this);
   }
 
   start() {
@@ -17,6 +18,9 @@ class GameView {
   }
 
   step() {
+    if ((!key.isPressed('left') && !key.isPressed('right')) || (key.isPressed('left') && key.isPressed('right'))) {
+      this.game.player.moveTo(0);
+    }
     this.game.step();
     this.game.draw(this.ctx);
   }
@@ -29,11 +33,8 @@ class GameView {
   }
 
   bindKeyHandlers() {
-    // key('w', () => { this.game.ship.power([0, -CONSTANTS.POWER]) });
-    // key('a', () => { this.game.ship.power([-CONSTANTS.POWER, 0]) });
-    // key('s', () => { this.game.ship.power([0, CONSTANTS.POWER]) });
-    // key('d', () => { this.game.ship.power([CONSTANTS.POWER, 0]) });
-    // key('space', () => { this.game.ship.fireBullet() });
+    key('left', () => { this.game.player.moveTo(-1) });
+    key('right', () => { this.game.player.moveTo(1) });
   }
 }
 
