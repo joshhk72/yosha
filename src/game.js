@@ -1,4 +1,5 @@
 const Player = require("./player.js");
+const Level = require("./level.js");
 const Vector = require("./vector.js");
 
 const CONSTANTS = {

@@ -170,6 +170,6 @@ class Player {
 }
 
 // This is player size in proportion to tile size
-Player.prototype.size = new Vec(1, 1.4);
+Player.prototype.size = new Vector(1, 1.4);
 
 module.exports = Player;
