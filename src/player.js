@@ -1,11 +1,13 @@
 const Vector = require('./vector');
 
+// each tile on the map is going to be 50 x 50
+// this makes the player size 1 x 1.4 tiles
 const CONSTANTS = {
   WIDTH: 50,
-  HEIGHT: 68,
+  HEIGHT: 70,
   TICKS_PER_FRAME: 6,
   STARTING_VEL: new Vector(0, 0),
-  STARTING_POS: new Vector(430, 380),
+  // STARTING_POS: new Vector(430, 380),
   MAX_FRAME_COUNT: 7,
 };
 
@@ -49,9 +51,10 @@ const SPRITE_SIZE = {
 
 
 class Player {
-  constructor() {
+  constructor(pos) {
     this.type = "player"; // This is for later, when levels start tracking 'actors' by types...
-    this.pos = CONSTANTS.STARTING_POS;
+    // this.pos = CONSTANTS.STARTING_POS;
+    this.pos = pos;
     this.vel = CONSTANTS.STARTING_VEL;
     this.width = CONSTANTS.WIDTH;
     this.height = CONSTANTS.HEIGHT;
@@ -165,5 +168,8 @@ class Player {
   isHit(projectile) {
   }
 }
+
+// This is player size in proportion to tile size
+Player.prototype.size = new Vec(1, 1.4);
 
 module.exports = Player;

@@ -1,4 +1,5 @@
 const Player = require("./player.js");
+const Vector = require("./vector.js");
 
 const CONSTANTS = {
   DIM_X: 900,
@@ -7,7 +8,7 @@ const CONSTANTS = {
 
 class Game {
   constructor() {
-    this.player = new Player();
+    this.player = new Player(new Vector(430, 380));
     this.img = new Image();
     this.img.src = '../assets/sprites/background.png';
   }

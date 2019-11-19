@@ -1,5 +1,10 @@
 // credit to https://eloquentjavascript.net/16_game.html
 // for both the code example and excellent writing
+const Player = require('./player.js');
+
+const levelChars = {
+  "P": Player,
+};
 
 class Level {
   constructor(plan) {
