@@ -53,7 +53,7 @@ const SPRITE_SIZE = {
 class Player {
   constructor(pos) {
     // this.pos = CONSTANTS.STARTING_POS;
-    this.pos = pos;
+    this.pos = pos.minus(new Vector(0, 0.4));
     this.vel = CONSTANTS.STARTING_VEL;
     this.width = CONSTANTS.WIDTH;
     this.height = CONSTANTS.HEIGHT;
@@ -163,8 +163,9 @@ class Player {
   selectSprite(ctx, coordinates, size, spritesImg) {
     // ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
     // s is source, d is destination
+    const extraHeight = 3; // Otherwise Yoshi looks like he's floating!!!
     const xOnScreen = 950/2 + 50*(this.pos.x - this.viewPortCenter.x);
-    const yOnScreen = 450/2 + 50*(this.pos.y - this.viewPortCenter.y);
+    const yOnScreen = 450/2 + 50*(this.pos.y - this.viewPortCenter.y) + extraHeight;
 
     ctx.drawImage(spritesImg, 
       coordinates[0], coordinates[1], 

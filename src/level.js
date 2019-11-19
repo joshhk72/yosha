@@ -16,6 +16,7 @@ const CONSTANTS = {
 const levelChars = {
   "@": Player,
   "#": Tile,
+  "$": Tile,
   "D": Door,
   ".": "empty",
 };
