@@ -20,15 +20,15 @@ const FRONT_SPRITE_POS = {
 };
 
 const BACK_SPRITE_POS = {
-  walk1: [718, 3],
-  walk2: [698, 3],
-  walk3: [680, 3],
-  walk4: [663, 3],
-  walk5: [646, 3],
-  walk6: [629, 3],
-  walk7: [612, 3],
-  walk8: [595, 3],
-  stand: [578, 3],
+  walk1: [141, 3],
+  walk2: [124, 3],
+  walk3: [107, 3],
+  walk4: [90, 3],
+  walk5: [73, 3],
+  walk6: [56, 3],
+  walk7: [39, 3],
+  walk8: [21, 3],
+  stand: [1, 3],
   jump1: [278, 3],
   jump2: [295, 3],
   fall: [9, 3]
@@ -66,7 +66,7 @@ class Player {
   }
 
   render(ctx) {
-    this.selectSprite(ctx, FRONT_SPRITE_POS['fall'], SPRITE_SIZE['fall'], this.frontSprites);
+    this.selectSprite(ctx, BACK_SPRITE_POS['walk1'], SPRITE_SIZE['walk'], this.backSprites);
   }
 
   selectSprite(ctx, coordinates, size, spritesImg) {
