@@ -52,7 +52,6 @@ const SPRITE_SIZE = {
 
 class Player {
   constructor(pos) {
-    this.type = "player"; // This is for later, when levels start tracking 'actors' by types...
     // this.pos = CONSTANTS.STARTING_POS;
     this.pos = pos;
     this.vel = CONSTANTS.STARTING_VEL;
@@ -75,16 +74,25 @@ class Player {
     this.ticksPerFrame = CONSTANTS.TICKS_PER_FRAME;
   }
 
-  static create() {
-    return new Player();
+  static create(pos) {
+    return new Player(pos);
   }
 
-  
+  get type() {
+    return "player";
+  }
+
+  get size() {
+    return new Vector(1, 1.4);
+  }
+
   moveTo(num) {
     this.movingTo = num;
   }
 
-  draw(ctx) {
+  draw(ctx, viewPortCenter) {
+    this.viewPortCenter = viewPortCenter;
+
     if (this.movingTo === 0) {
       return this.facingFront ? this.selectSprite(ctx, FRONT_SPRITE_POS['stand'], SPRITE_SIZE['stand'], this.frontSprites)
         : this.selectSprite(ctx, BACK_SPRITE_POS['stand'], SPRITE_SIZE['stand'], this.backSprites);
@@ -155,10 +163,13 @@ class Player {
   selectSprite(ctx, coordinates, size, spritesImg) {
     // ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
     // s is source, d is destination
+    const xOnScreen = 950/2 + 50*(this.pos.x - this.viewPortCenter.x);
+    const yOnScreen = 450/2 + 50*(this.pos.y - this.viewPortCenter.y);
+
     ctx.drawImage(spritesImg, 
       coordinates[0], coordinates[1], 
       size[0], size[1],
-      this.pos.x, this.pos.y,
+      xOnScreen, yOnScreen,
       this.width, this.height);
   }
 
@@ -168,8 +179,5 @@ class Player {
   isHit(projectile) {
   }
 }
-
-// This is player size in proportion to tile size
-Player.prototype.size = new Vector(1, 1.4);
 
 module.exports = Player;

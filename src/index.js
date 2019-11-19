@@ -8,7 +8,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const gameView = new GameView(ctx);
   gameView.start();
 
-
   // const player = new Player({ pos:[0,0], vel:[0,0] });
   // player.render(ctx);
 });

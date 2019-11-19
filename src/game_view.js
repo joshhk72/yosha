@@ -1,10 +1,11 @@
-const Game = require("./game.js");
+//const Game = require("./game.js");
+const Level = require("./level.js");
+const GAME_LEVELS = require("./levels");
 
 class GameView {
   constructor(ctx) {
     this.ctx = ctx;
-    this.game = new Game();
-
+    this.currentLevel = new Level(GAME_LEVELS[0]);
     this.started = false;
     this.over = false;
     this.paused = false;
@@ -19,10 +20,11 @@ class GameView {
 
   step() {
     if ((!key.isPressed('left') && !key.isPressed('right')) || (key.isPressed('left') && key.isPressed('right'))) {
-      this.game.player.moveTo(0);
+      this.currentLevel.player.moveTo(0);
     }
-    this.game.step();
-    this.game.draw(this.ctx);
+    // this.game.step();
+    this.currentLevel.step();
+    this.currentLevel.draw(this.ctx);
   }
 
   render() {
@@ -33,8 +35,8 @@ class GameView {
   }
 
   bindKeyHandlers() {
-    key('left', () => { this.game.player.moveTo(-1) });
-    key('right', () => { this.game.player.moveTo(1) });
+    key('left', () => { this.currentLevel.player.moveTo(-1) });
+    key('right', () => { this.currentLevel.player.moveTo(1) });
   }
 }
 

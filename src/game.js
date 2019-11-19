@@ -3,8 +3,8 @@ const Level = require("./level.js");
 const Vector = require("./vector.js");
 
 const CONSTANTS = {
-  DIM_X: 900,
-  DIM_Y: 500,
+  DIM_X: 950,
+  DIM_Y: 450,
 };
 
 class Game {
@@ -16,7 +16,7 @@ class Game {
 
   draw(ctx) {
     ctx.clearRect(0, 0, CONSTANTS.DIM_X, CONSTANTS.DIM_Y);
-    ctx.drawImage(this.img, 0, 0, 900, 500);
+    ctx.drawImage(this.img, 0, 0, CONSTANTS.DIM_X, CONSTANTS.DIM_Y);
     this.player.draw(ctx);
   }
 
