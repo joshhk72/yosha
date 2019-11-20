@@ -87,8 +87,12 @@ class Player {
     this.vel = CONSTANTS.STARTING_VEL;
     this.frontSprites = new Image();
     this.backSprites = new Image();
+    this.frontHitSprites = new Image();
+    this.backHitSprites = new Image();
     this.frontSprites.src = '../assets/sprites/yoshi.png';
     this.backSprites.src = '../assets/sprites/back-yoshi.png';
+    this.frontHitSprites.src = '../assets/sprites/front-hit-yoshi.png';
+    this.backHitSprites.src = '../assets/sprites/back-hit-yoshi.png';
     
     this.facingFront = true; // facing front at the start
     this.movingTo = 0;
@@ -153,6 +157,7 @@ class Player {
   shoot(state) {
     if (!this.reloading && !this.shooting && !this.shootingUp) {
       this.tickCount = 0;
+      this.frameCount = 0;
       this.shooting = true;
       this.reloading = true;
       let newEgg;
@@ -168,6 +173,7 @@ class Player {
   shootUp(state) {
     if (!this.reloading && !this.shooting && !this.shootingUp) {
       this.tickCount = 0;
+      this.frameCount = 0;
       this.shootingUp = true;
       this.reloading = true;
       // shooting straight up
@@ -348,12 +354,6 @@ class Player {
       size[0], size[1],
       xOnScreen, yOnScreen,
       width, height);
-  }
-
-  collided(hitbox) {
-  }
-
-  isHit(projectile) {
   }
 }
 

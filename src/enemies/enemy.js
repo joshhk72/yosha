@@ -15,6 +15,7 @@ class Enemy {
 
   getHit() {
     this.tickCount = 0;
+    this.frameCount = 0;
     this.isHit = true;
     // this.life is decremented in the below function, since the animation must happen first!
   }

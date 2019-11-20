@@ -4,8 +4,8 @@ const CONSTANTS = {
   WIDTH: 50,
   HEIGHT: 70,
   TILE_SIZE: 50,
-  TICKS_PER_FRAME: 6,
-  MAX_FRAME_COUNT: 7,
+  TICKS_PER_FRAME: 3,
+  MAX_FRAME_COUNT: 15,
 };
 
 const SPRITE_POS = {
@@ -92,36 +92,50 @@ class FatBird extends Enemy {
         case 0:
           return this.selectSprite(ctx, SPRITE_POS['idle1'], SPRITE_SIZE['idle1'], this.idleSprites);
         case 1:
-          return this.selectSprite(ctx, SPRITE_POS['idle2'], SPRITE_SIZE['idle2'], this.idleSprites);
+          return this.selectSprite(ctx, SPRITE_POS['idle1'], SPRITE_SIZE['idle1'], this.idleSprites);
         case 2:
-          return this.selectSprite(ctx, SPRITE_POS['idle3'], SPRITE_SIZE['idle3'], this.idleSprites);
+          return this.selectSprite(ctx, SPRITE_POS['idle2'], SPRITE_SIZE['idle2'], this.idleSprites);
         case 3:
-          return this.selectSprite(ctx, SPRITE_POS['idle4'], SPRITE_SIZE['idle4'], this.idleSprites);
+          return this.selectSprite(ctx, SPRITE_POS['idle2'], SPRITE_SIZE['idle2'], this.idleSprites);
         case 4:
-          return this.selectSprite(ctx, SPRITE_POS['idle5'], SPRITE_SIZE['idle5'], this.idleSprites);
+          return this.selectSprite(ctx, SPRITE_POS['idle3'], SPRITE_SIZE['idle3'], this.idleSprites);
         case 5:
-          return this.selectSprite(ctx, SPRITE_POS['idle6'], SPRITE_SIZE['idle6'], this.idleSprites);
+          return this.selectSprite(ctx, SPRITE_POS['idle3'], SPRITE_SIZE['idle3'], this.idleSprites);
         case 6:
-          return this.selectSprite(ctx, SPRITE_POS['idle7'], SPRITE_SIZE['idle7'], this.idleSprites);
+          return this.selectSprite(ctx, SPRITE_POS['idle4'], SPRITE_SIZE['idle4'], this.idleSprites);
         case 7:
+          return this.selectSprite(ctx, SPRITE_POS['idle4'], SPRITE_SIZE['idle4'], this.idleSprites);
+        case 8:
+          return this.selectSprite(ctx, SPRITE_POS['idle5'], SPRITE_SIZE['idle5'], this.idleSprites);
+        case 9:
+          return this.selectSprite(ctx, SPRITE_POS['idle5'], SPRITE_SIZE['idle5'], this.idleSprites);
+        case 10:
+          return this.selectSprite(ctx, SPRITE_POS['idle6'], SPRITE_SIZE['idle6'], this.idleSprites);
+        case 11:
+          return this.selectSprite(ctx, SPRITE_POS['idle6'], SPRITE_SIZE['idle6'], this.idleSprites);
+        case 12:
+          return this.selectSprite(ctx, SPRITE_POS['idle7'], SPRITE_SIZE['idle7'], this.idleSprites);
+        case 13:
+          return this.selectSprite(ctx, SPRITE_POS['idle7'], SPRITE_SIZE['idle7'], this.idleSprites);
+        case 14:
+          return this.selectSprite(ctx, SPRITE_POS['idle8'], SPRITE_SIZE['idle8'], this.idleSprites);
+        case 15:
           return this.selectSprite(ctx, SPRITE_POS['idle8'], SPRITE_SIZE['idle8'], this.idleSprites);
       }
     } else {
-      switch (this.frameCount) {
-        case 0 || 5:
-          return this.selectSprite(ctx, SPRITE_POS['hit1'], SPRITE_SIZE['hit1'], this.hitSprites);
-        case 1 || 6:
-          return this.selectSprite(ctx, SPRITE_POS['hit2'], SPRITE_SIZE['hit2'], this.hitSprites);
-        case 2 || 7:
-          return this.selectSprite(ctx, SPRITE_POS['hit3'], SPRITE_SIZE['hit3'], this.hitSprites);
-        case 3:
-          return this.selectSprite(ctx, SPRITE_POS['hit4'], SPRITE_SIZE['hit4'], this.hitSprites);
-        case 4:
-          return this.selectSprite(ctx, SPRITE_POS['hit5'], SPRITE_SIZE['hit5'], this.hitSprites);
-      }
+      if ([0, 1, 10, 15].includes(this.frameCount)) {
+        return this.selectSprite(ctx, SPRITE_POS['hit1'], SPRITE_SIZE['hit1'], this.hitSprites);
+      } else if ([2, 3, 11].includes(this.frameCount)) {
+        return this.selectSprite(ctx, SPRITE_POS['hit2'], SPRITE_SIZE['hit2'], this.hitSprites);
+      } else if ([4, 5, 12].includes(this.frameCount)) {
+        return this.selectSprite(ctx, SPRITE_POS['hit3'], SPRITE_SIZE['hit3'], this.hitSprites);
+      } else if ([6, 7, 13].includes(this.frameCount)) {
+        return this.selectSprite(ctx, SPRITE_POS['hit4'], SPRITE_SIZE['hit4'], this.hitSprites);
+      } else if ([8, 9, 14].includes(this.frameCount)) {
+        return this.selectSprite(ctx, SPRITE_POS['hit5'], SPRITE_SIZE['hit5'], this.hitSprites);
+      } 
     }
   }
-
 
   selectSprite(ctx, coordinates, size, spritesImg) {
     // [35, 235] is taken as the default sprite size for fat bird (tis just an estimate...)
