@@ -5,6 +5,7 @@ const Player = require('./player.js');
 const Door = require('./door.js');
 const Vector = require('./vector');
 const State = require('./level_state');
+const _ = require('lodash');
 
 const CONSTANTS = {
   DIM_X: 950,
@@ -60,7 +61,6 @@ class Level {
 
     // Bound functions
     this.inViewPort = this.inViewPort.bind(this);
-
     this.state = State.start(this);
   }
 
@@ -74,7 +74,7 @@ class Level {
 
     // Step for player, and move viewport sideways if needed
 
-    this.actors.forEach(actor => {
+    this.state.actors.forEach(actor => {
       if (actor.type === "player") {
         this.player.step(timeStep, this.state);
         if (this.player.pos.x > this.viewPortCenter.x + 3) {
@@ -88,14 +88,23 @@ class Level {
         } else if (this.player.pos.y < this.viewPortCenter.y - 2) {
           this.viewPortCenter.y = this.player.pos.y + 2;
         }
+        // if not a player
       } else {
         actor.step(timeStep, this.state);
+
+        let isOutside = actor.pos.x < 0 || actor.pos.x > this.width ||
+          actor.pos.y < 0 || actor.pos.y > this.height;
+
+        console.log(this.state.actors);
+
+        if (isOutside) {
+          this.state.actors = this.state.actors.filter(a => {
+            const notSame = _.isEqual(a, actor);
+            return !notSame;
+          });
+        }
       }
-
     })
-
-
-
   }
 
   draw(ctx) {
@@ -108,9 +117,9 @@ class Level {
       };
     });
 
-    this.actors.forEach(actor => {
+    this.state.actors.forEach(actor => {
       if (this.inViewPort(actor)) {
-        actor.draw(ctx, this.viewPortCenter); 
+        actor.draw(ctx, this.viewPortCenter);
       };
     })
   }

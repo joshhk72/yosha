@@ -154,6 +154,13 @@ class Player {
     if (!this.reloading && !this.shooting && !this.shootingUp) {
       this.tickCount = 0;
       this.shooting = true;
+      let newEgg;
+      if (this.facingFront) {
+        newEgg = new Egg(this.pos, new Vector(0.5, 0.5));
+      } else {
+        newEgg = new Egg(this.pos, new Vector(-0.5, 0.5));
+      }
+      state.actors.push(newEgg);
     }
   }
 
@@ -161,6 +168,9 @@ class Player {
     if (!this.reloading && !this.shooting && !this.shootingUp) {
       this.tickCount = 0;
       this.shootingUp = true;
+      // shooting straight up
+      const newEgg = new Egg(this.pos, new Vector(0, 0.2));
+      state.actors.push(newEgg);
     }
   }
 
