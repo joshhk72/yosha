@@ -5,7 +5,6 @@ const Player = require('./player.js');
 const Door = require('./door.js');
 const Vector = require('./vector');
 const State = require('./level_state');
-const _ = require('lodash');
 
 // enemies here
 const FatBird = require('./enemies/fat_bird');
@@ -95,7 +94,8 @@ class Level {
           this.viewPortCenter.y = this.player.pos.y + 2;
         }
         // if not a player
-      } else {
+
+      } else if (actor.type === "egg") {
         actor.step(timeStep, this.state);
 
         let isOutside = actor.pos.x < 0 || actor.pos.x > this.width ||
@@ -103,10 +103,14 @@ class Level {
 
         if (isOutside) {
           this.state.actors = this.state.actors.filter(a => {
-            const notSame = _.isEqual(a, actor);
-            return !notSame;
+            const same = a === actor
+            console.log(same);
+            return !same;
           });
         }
+
+      } else {
+        actor.step(timeStep, this.state);
       }
     })
   }
