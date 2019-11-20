@@ -5,6 +5,7 @@ const Vector = require('./vector');
 const CONSTANTS = {
   WIDTH: 50,
   HEIGHT: 70,
+  TILE_SIZE: 50,
   TICKS_PER_FRAME: 6,
   GRAVITY: 0.29,
   X_SPEED: 0.4,
@@ -15,59 +16,76 @@ const CONSTANTS = {
 };
 
 const FRONT_SPRITE_POS = {
-  walk1: [718, 3],
-  walk2: [698, 3],
-  walk3: [680, 3],
-  walk4: [663, 3],
-  walk5: [646, 3],
-  walk6: [629, 3],
-  walk7: [612, 3],
-  walk8: [595, 3],
-  stand: [578, 3],
+  walk1: [699, 4],
+  walk2: [681, 4],
+  walk3: [664, 4],
+  walk4: [647, 4],
+  walk5: [630, 4],
+  walk6: [613, 5],
+  walk7: [596, 4],
+  walk8: [579, 4],
+  stand: [719, 4],
   jump1: [278, 3],
   jump2: [295, 3],
   fall: [9, 3]
 };
 
 const BACK_SPRITE_POS = {
-  walk1: [141, 3],
-  walk2: [124, 3],
-  walk3: [107, 3],
-  walk4: [90, 3],
-  walk5: [73, 3],
-  walk6: [56, 3],
-  walk7: [39, 3],
-  walk8: [21, 3],
-  stand: [1, 3],
+  lookUp: [525, 4],
+  walk1: [142, 4],
+  walk2: [125, 4],
+  walk3: [108, 5],
+  walk4: [91, 4],
+  walk5: [74, 4],
+  walk6: [57, 4],
+  walk7: [40, 4],
+  walk8: [22, 4],
+  throw1: [167, 5],
+  throw2: [187, 4],
+  throw3: [207, 4],
+  throw4: [229, 4],
+  throw5: [253, 4],
+  throw6: [277, 4],
+  throw7: [299, 6],
+  throw8: [318, 4],
+  stand: [2, 4],
   jump1: [278, 3],
   jump2: [295, 3],
   fall: [9, 3]
 };
 
 const SPRITE_SIZE = {
-  walk: [17, 26],
-  stand: [17, 26],
+  lookUp: [15, 25],
+  walk: [15, 25],
+  stand: [15, 25],
   jump1: [17, 26],
   jump2: [19, 26],
-  fall: [21, 26]
+  fall: [21, 26],
+  throw1: [17, 24],
+  throw2: [16, 25],
+  throw3: [19, 25],
+  throw4: [21, 25],
+  throw5: [21, 25],
+  throw6: [19, 25],
+  throw7: [15, 23],
+  throw8: [18, 25],
 };
 
 
 class Player {
   constructor(pos) {
     // this.pos = CONSTANTS.STARTING_POS;
-    this.pos = pos.minus(new Vector(0, 0.41));
+    this.pos = pos.minus(new Vector(0, 0.333));
     this.vel = CONSTANTS.STARTING_VEL;
-    this.width = CONSTANTS.WIDTH;
-    this.height = CONSTANTS.HEIGHT;
     this.frontSprites = new Image();
     this.backSprites = new Image();
     this.frontSprites.src = '../assets/sprites/yoshi.png';
     this.backSprites.src = '../assets/sprites/back-yoshi.png';
     
     this.facingFront = true; // facing front at the start
-    this.wasMoving = 0;
     this.movingTo = 0;
+    this.wasMoving = 0;
+    this.verticalPerspective = 0;
     this.jumping = false;
     
     // http://www.williammalone.com/articles/create-html5-canvas-javascript-sprite-animation/
@@ -89,9 +107,10 @@ class Player {
   }
 
   get size() {
-    return new Vector(1, 1.4);
+    return new Vector(0.8, 1.333);
   }
 
+  // moveTo determines x-direction movement
   moveTo(num) {
     this.movingTo = num;
     switch (num) {
@@ -107,6 +126,10 @@ class Player {
     }
   }
 
+  lookVertically(num) {
+    this.verticalPerspective = num;
+  }
+
   jump() {
     if (!this.jumping) {
       this.vel.y = -CONSTANTS.JUMP_SPEED;
@@ -114,10 +137,15 @@ class Player {
     }
   }
 
+  shootEgg() {
+
+  }
+
   draw(ctx, viewPortCenter) {
     this.viewPortCenter = viewPortCenter;
-
-    if (this.movingTo === 0) {
+    if (this.verticalPerspective > 0 && this.vel.x === 0) {
+      this.selectSprite(ctx, BACK_SPRITE_POS['lookUp'], SPRITE_SIZE['lookUp'], this.backSprites);
+    } else if (this.movingTo === 0) {
       return this.facingFront ? this.selectSprite(ctx, FRONT_SPRITE_POS['stand'], SPRITE_SIZE['stand'], this.frontSprites)
         : this.selectSprite(ctx, BACK_SPRITE_POS['stand'], SPRITE_SIZE['stand'], this.backSprites);
     } else if (this.movingTo > 0) {
@@ -163,9 +191,14 @@ class Player {
 
   handleFrames() {
     // Increment ticks if continuously moving
-    if (this.wasMoving === this.movingTo) {
-      this.tickCount += 1;
-    } else {
+    if (this.movingTo !== 0) {
+      if (this.wasMoving === this.movingTo) {
+        this.tickCount += 1;
+      } else {
+        this.tickCount = 0;
+        this.frameCount = 0;
+      }
+    } else { // just in case ticks & frames are used for something else than walking!
       this.tickCount = 0;
       this.frameCount = 0;
     }
@@ -194,8 +227,10 @@ class Player {
     let yVel = this.vel.y + timeStep * CONSTANTS.GRAVITY;
     const yMoveTo = this.pos.plus(new Vector(0, yVel * timeStep));
     if (!state.level.touches(yMoveTo, this.size, "wall") && !state.level.touches(yMoveTo, this.size, "tile")) {
+      // jumping or falling
       this.pos = yMoveTo;
     } else if (yMoveTo.y > this.pos.y) {
+      // player is on the ground
       yVel = 0;
       this.jumping = false;
     }
@@ -209,6 +244,9 @@ class Player {
   }
 
   selectSprite(ctx, coordinates, size, spritesImg) {
+    const width = CONSTANTS.TILE_SIZE * this.size.x;
+    const height = CONSTANTS.TILE_SIZE * this.size.y;
+
     // ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
     // s is source, d is destination
     const extraHeight = 3; // Otherwise Yoshi looks like he's floating!!!
@@ -219,7 +257,7 @@ class Player {
       coordinates[0], coordinates[1], 
       size[0], size[1],
       xOnScreen, yOnScreen,
-      this.width, this.height);
+      width, height);
   }
 
   collided(hitbox) {

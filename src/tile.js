@@ -39,6 +39,8 @@ class Tile {
   }
 
   draw(ctx, viewPortCenter) {
+    const width = CONSTANTS.TILE_SIZE;
+    const height = CONSTANTS.TILE_SIZE;
     const xOnScreen = 950 / 2 + 50 * (this.pos.x - viewPortCenter.x);
     const yOnScreen = 450 / 2 + 50 * (this.pos.y - viewPortCenter.y);
     if (this.char === "#") {
@@ -52,7 +54,7 @@ class Tile {
         SPRITE_POS["dirt1"][0], SPRITE_POS["dirt1"][1],
         SPRITE_SIZE["dirt1"][0], SPRITE_SIZE["dirt1"][1],
         xOnScreen, yOnScreen,
-        CONSTANTS.TILE_SIZE, CONSTANTS.TILE_SIZE);
+        width, height);
     }
   }
 }

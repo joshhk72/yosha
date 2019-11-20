@@ -13,6 +13,10 @@ class Door {
     return new Vector(1, 1);
   }
 
+  step() {
+    
+  }
+
   draw() {
 
   }

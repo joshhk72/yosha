@@ -26,6 +26,9 @@ class GameView {
     if ((!key.isPressed('left') && !key.isPressed('right')) || (key.isPressed('left') && key.isPressed('right'))) {
       this.currentLevel.player.moveTo(0);
     }
+    if ((!key.isPressed('up') && !key.isPressed('down')) || (key.isPressed('up') && key.isPressed('down'))) {
+      this.currentLevel.player.lookVertically(0);
+    }
     // this.game.step();
     this.currentLevel.step(CONSTANTS.TIME);
     this.currentLevel.draw(this.ctx);
@@ -41,6 +44,8 @@ class GameView {
   bindKeyHandlers() {
     key('left', () => { this.currentLevel.player.moveTo(-1) });
     key('right', () => { this.currentLevel.player.moveTo(1) });
+    key('up', () => { this.currentLevel.player.lookVertically(1) });
+    key('down', () => { this.currentLevel.player.lookVertically(-1) });
     key('z', () => { this.currentLevel.player.jump() });
   }
 }

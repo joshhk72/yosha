@@ -65,18 +65,38 @@ class Level {
   }
 
   step(timeStep) {
-    if (!this.doItOnce) {
+    if (!this.doItOnce) { // for bug-testing
       this.doItOnce = true;
+      console.log(this.actors);
       // console.log(this.tiles);
       // console.log(this.player);
       // console.log(this.viewPortCenter);
     }
-    this.player.step(timeStep, this.state);
-    if (this.player.pos.x > this.viewPortCenter.x + 3) {
-      this.viewPortCenter.x = this.player.pos.x - 3;
-    } else if (this.player.pos.x < this.viewPortCenter.x - 3) {
-      this.viewPortCenter.x = this.player.pos.x + 3;
-    }
+
+    // Step for player, and move viewport sideways if needed
+
+    this.actors.forEach(actor => {
+      if (actor.type === "player") {
+        this.player.step(timeStep, this.state);
+        if (this.player.pos.x > this.viewPortCenter.x + 3) {
+          this.viewPortCenter.x = this.player.pos.x - 3;
+        } else if (this.player.pos.x < this.viewPortCenter.x - 3) {
+          this.viewPortCenter.x = this.player.pos.x + 3;
+        }
+    
+        if (this.player.pos.y > this.viewPortCenter.y + 2) {
+          this.viewPortCenter.y = this.player.pos.y - 2;
+        } else if (this.player.pos.y < this.viewPortCenter.y - 2) {
+          this.viewPortCenter.y = this.player.pos.y + 2;
+        }
+      } else {
+        actor.step(timeStep, this.state);
+      }
+
+    })
+
+
+
   }
 
   draw(ctx) {
@@ -101,11 +121,6 @@ class Level {
   }
 
   inViewPort(element) {
-    // const topRight = element.pos.plus(element.size.times(0.5));
-    // const topLeft = topRight.plus(new Vector(-element.size.x, 0));
-    // const bottomLeft = element.pos.plus(element.size.times(-0.5));
-    // const bottomRight = bottomLeft.plus(new Vector(element.size.x, 0));
-
     const distance = this.viewPortCenter.distanceFrom(element.pos);
     return (
       distance.x < CONSTANTS.VIEWPORT_WIDTH / 2 + element.size.x 
