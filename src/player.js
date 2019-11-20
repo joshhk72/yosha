@@ -95,6 +95,7 @@ class Player {
     this.wasMoving = 0;
     this.verticalPerspective = 0;
     this.jumping = false;
+    this.onGround = false;
 
     this.reloading = false; // this is for 'throttling' shooting of eggs
     this.shooting = false;
@@ -143,7 +144,7 @@ class Player {
   }
 
   jump() {
-    if (!this.jumping) {
+    if (!this.jumping && this.onGround) {
       this.vel.y = -CONSTANTS.JUMP_SPEED;
       this.jumping = true;
     }
@@ -303,11 +304,13 @@ class Player {
     const yMoveTo = this.pos.plus(new Vector(0, yVel * timeStep));
     if (!state.level.touches(yMoveTo, this.size, "wall") && !state.level.touches(yMoveTo, this.size, "tile")) {
       // jumping or falling
+      this.onGround = false;
       this.pos = yMoveTo;
     } else if (yMoveTo.y > this.pos.y) {
       // player is on the ground
       yVel = 0;
       this.jumping = false;
+      this.onGround = true;
     }
 
     this.vel = new Vector(xVel, yVel);
