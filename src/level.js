@@ -93,9 +93,7 @@ class Level {
         actor.step(timeStep, this.state);
 
         let isOutside = actor.pos.x < 0 || actor.pos.x > this.width ||
-          actor.pos.y < 0 || actor.pos.y > this.height;
-
-        console.log(this.state.actors);
+          actor.pos.y < 0 - 3 || actor.pos.y > this.height + 3; // more generous with y bounds
 
         if (isOutside) {
           this.state.actors = this.state.actors.filter(a => {

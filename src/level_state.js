@@ -3,6 +3,7 @@ class State {
     this.level = level;
     this.actors = actors;
     this.status = status;
+    // tiles don't need to be in state because they don't change (yet...)
   }
 
   static start(level) {

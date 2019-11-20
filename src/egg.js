@@ -44,12 +44,11 @@ class Egg {
   draw(ctx, viewPortCenter) {
     const xOnScreen = 950 / 2 + 50 * (this.pos.x - viewPortCenter.x);
     const yOnScreen = 450 / 2 + 50 * (this.pos.y - viewPortCenter.y);
-    
     ctx.drawImage(this.sprites,
       CONSTANTS.SPRITE_POS[0], CONSTANTS.SPRITE_POS[1],
       CONSTANTS.SPRITE_SIZE[0], CONSTANTS.SPRITE_SIZE[1],
       xOnScreen, yOnScreen,
-      CONSTANTS.TILE_SIZE, CONSTANTS.TILE_SIZE);
+      CONSTANTS.WIDTH, CONSTANTS.HEIGHT);
   }
 }
 

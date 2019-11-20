@@ -156,9 +156,9 @@ class Player {
       this.shooting = true;
       let newEgg;
       if (this.facingFront) {
-        newEgg = new Egg(this.pos, new Vector(0.5, 0.5));
+        newEgg = new Egg(this.pos, new Vector(0.7, -1));
       } else {
-        newEgg = new Egg(this.pos, new Vector(-0.5, 0.5));
+        newEgg = new Egg(this.pos, new Vector(-0.7, -1));
       }
       state.actors.push(newEgg);
     }
@@ -169,7 +169,7 @@ class Player {
       this.tickCount = 0;
       this.shootingUp = true;
       // shooting straight up
-      const newEgg = new Egg(this.pos, new Vector(0, 0.2));
+      const newEgg = new Egg(this.pos, new Vector(0, -1.8));
       state.actors.push(newEgg);
     }
   }
