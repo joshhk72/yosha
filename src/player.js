@@ -6,9 +6,9 @@ const CONSTANTS = {
   WIDTH: 50,
   HEIGHT: 70,
   TICKS_PER_FRAME: 6,
-  GRAVITY: 0.3,
+  GRAVITY: 0.29,
   X_SPEED: 0.4,
-  JUMP_SPEED: 1.0,
+  JUMP_SPEED: 1.1,
   STARTING_VEL: new Vector(0, 0),
   // STARTING_POS: new Vector(430, 380),
   MAX_FRAME_COUNT: 7,
@@ -108,8 +108,6 @@ class Player {
   }
 
   jump() {
-    console.log('jump');
-    console.log(this.vel);
     if (!this.jumping) {
       this.vel.y = -CONSTANTS.JUMP_SPEED;
       this.jumping = true;

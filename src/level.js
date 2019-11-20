@@ -72,6 +72,11 @@ class Level {
       // console.log(this.viewPortCenter);
     }
     this.player.step(timeStep, this.state);
+    if (this.player.pos.x > this.viewPortCenter.x + 3) {
+      this.viewPortCenter.x = this.player.pos.x - 3;
+    } else if (this.player.pos.x < this.viewPortCenter.x - 3) {
+      this.viewPortCenter.x = this.player.pos.x + 3;
+    }
   }
 
   draw(ctx) {
@@ -92,7 +97,7 @@ class Level {
   }
 
   scrollPlayerIntoView() {
-    this.viewPortCenter = this.player.pos.plus(new Vector(0, -2));
+    this.viewPortCenter = this.player.pos.plus(new Vector(0, -1.5));
   }
 
   inViewPort(element) {

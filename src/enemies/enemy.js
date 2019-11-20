@@ -1,15 +1,13 @@
-// options will look like
-// const options = {
-//   pos: [20, 20],
-//   vel: [5, 5],
-//   size: [2, 4]
-// }
-
 class HitboxObject {
   constructor(options) {
     this.pos = options.pos;
     this.vel = options.vel;
     this.size = options.size;
+  }
+
+  step(timeStep, state) {
+    this.handleFrames();
+    this.handleMovement(timeStep, state);
   }
 
   draw(ctx) {
