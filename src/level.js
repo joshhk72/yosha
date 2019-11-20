@@ -67,7 +67,6 @@ class Level {
   step(timeStep) {
     if (!this.doItOnce) { // for bug-testing
       this.doItOnce = true;
-      console.log(this.actors);
       // console.log(this.tiles);
       // console.log(this.player);
       // console.log(this.viewPortCenter);

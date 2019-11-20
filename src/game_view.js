@@ -47,6 +47,13 @@ class GameView {
     key('up', () => { this.currentLevel.player.lookVertically(1) });
     key('down', () => { this.currentLevel.player.lookVertically(-1) });
     key('z', () => { this.currentLevel.player.jump() });
+    key('x', () => { 
+      if (!key.isPressed("up")) {
+        this.currentLevel.player.shoot(this.currentLevel.state);
+      } else {
+        this.currentLevel.player.shootUp(this.currentLevel.state);
+      }
+    });
   }
 }
 

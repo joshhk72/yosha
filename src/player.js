@@ -1,4 +1,5 @@
 const Vector = require('./vector');
+const Egg = require('./egg');
 
 // each tile on the map is going to be 50 x 50
 // this makes the player size 1 x 1.4 tiles
@@ -11,7 +12,7 @@ const CONSTANTS = {
   X_SPEED: 0.4,
   JUMP_SPEED: 1.1,
   STARTING_VEL: new Vector(0, 0),
-  // STARTING_POS: new Vector(430, 380),
+  RELOAD_TIME: 250, // in milliseconds
   MAX_FRAME_COUNT: 7,
 };
 
@@ -24,6 +25,14 @@ const FRONT_SPRITE_POS = {
   walk6: [613, 5],
   walk7: [596, 4],
   walk8: [579, 4],
+  shoot1: [552, 5],
+  shoot2: [533, 4],
+  shoot3: [510, 4],
+  shoot4: [486, 4],
+  shoot5: [462, 4],
+  shoot6: [440, 4],
+  shoot7: [422, 6],
+  shoot8: [400, 4],
   stand: [719, 4],
   jump1: [278, 3],
   jump2: [295, 3],
@@ -40,14 +49,14 @@ const BACK_SPRITE_POS = {
   walk6: [57, 4],
   walk7: [40, 4],
   walk8: [22, 4],
-  throw1: [167, 5],
-  throw2: [187, 4],
-  throw3: [207, 4],
-  throw4: [229, 4],
-  throw5: [253, 4],
-  throw6: [277, 4],
-  throw7: [299, 6],
-  throw8: [318, 4],
+  shoot1: [167, 5],
+  shoot2: [187, 4],
+  shoot3: [207, 4],
+  shoot4: [229, 4],
+  shoot5: [253, 4],
+  shoot6: [277, 4],
+  shoot7: [299, 6],
+  shoot8: [318, 4],
   stand: [2, 4],
   jump1: [278, 3],
   jump2: [295, 3],
@@ -61,21 +70,20 @@ const SPRITE_SIZE = {
   jump1: [17, 26],
   jump2: [19, 26],
   fall: [21, 26],
-  throw1: [17, 24],
-  throw2: [16, 25],
-  throw3: [19, 25],
-  throw4: [21, 25],
-  throw5: [21, 25],
-  throw6: [19, 25],
-  throw7: [15, 23],
-  throw8: [18, 25],
+  shoot1: [17, 24],
+  shoot2: [16, 25],
+  shoot3: [19, 25],
+  shoot4: [21, 25],
+  shoot5: [21, 25],
+  shoot6: [19, 25],
+  shoot7: [15, 23],
+  shoot8: [18, 25],
 };
 
 
 class Player {
   constructor(pos) {
-    // this.pos = CONSTANTS.STARTING_POS;
-    this.pos = pos.minus(new Vector(0, 0.333));
+    this.pos = pos.minus(new Vector(0, 0.333)); // offset needed because character is taller than single tile
     this.vel = CONSTANTS.STARTING_VEL;
     this.frontSprites = new Image();
     this.backSprites = new Image();
@@ -87,6 +95,10 @@ class Player {
     this.wasMoving = 0;
     this.verticalPerspective = 0;
     this.jumping = false;
+
+    this.reloading = false; // this is for 'throttling' shooting of eggs
+    this.shooting = false;
+    this.shootingUp = false; // these two are differentiated so that animations can be differentiated
     
     // http://www.williammalone.com/articles/create-html5-canvas-javascript-sprite-animation/
     this.frameCount = 0;
@@ -137,13 +149,64 @@ class Player {
     }
   }
 
-  shootEgg() {
+  shoot(state) {
+    if (!this.reloading && !this.shooting && !this.shootingUp) {
+      this.tickCount = 0;
+      this.shooting = true;
+    }
+  }
 
+  shootUp(state) {
+    if (!this.reloading && !this.shooting && !this.shootingUp) {
+      this.tickCount = 0;
+      this.shootingUp = true;
+    }
   }
 
   draw(ctx, viewPortCenter) {
     this.viewPortCenter = viewPortCenter;
-    if (this.verticalPerspective > 0 && this.vel.x === 0) {
+
+    if (this.shooting && this.facingFront) {
+      switch (this.frameCount) {
+        case 0:
+          return this.selectSprite(ctx, FRONT_SPRITE_POS['shoot1'], SPRITE_SIZE['shoot1'], this.frontSprites);
+        case 1:
+          return this.selectSprite(ctx, FRONT_SPRITE_POS['shoot2'], SPRITE_SIZE['shoot2'], this.frontSprites);
+        case 2:
+          return this.selectSprite(ctx, FRONT_SPRITE_POS['shoot3'], SPRITE_SIZE['shoot3'], this.frontSprites);
+        case 3:
+          return this.selectSprite(ctx, FRONT_SPRITE_POS['shoot4'], SPRITE_SIZE['shoot4'], this.frontSprites);
+        case 4:
+          return this.selectSprite(ctx, FRONT_SPRITE_POS['shoot5'], SPRITE_SIZE['shoot5'], this.frontSprites);
+        case 5:
+          return this.selectSprite(ctx, FRONT_SPRITE_POS['shoot6'], SPRITE_SIZE['shoot6'], this.frontSprites);
+        case 6:
+          return this.selectSprite(ctx, FRONT_SPRITE_POS['shoot7'], SPRITE_SIZE['shoot7'], this.frontSprites);
+        case 7:
+          return this.selectSprite(ctx, FRONT_SPRITE_POS['shoot8'], SPRITE_SIZE['shoot8'], this.frontSprites);
+      }
+    } else if (this.shooting && !this.facingFront) {
+      switch (this.frameCount) {
+        case 0:
+          return this.selectSprite(ctx, BACK_SPRITE_POS['shoot1'], SPRITE_SIZE['shoot1'], this.backSprites);
+        case 1:
+          return this.selectSprite(ctx, BACK_SPRITE_POS['shoot2'], SPRITE_SIZE['shoot2'], this.backSprites);
+        case 2:
+          return this.selectSprite(ctx, BACK_SPRITE_POS['shoot3'], SPRITE_SIZE['shoot3'], this.backSprites);
+        case 3:
+          return this.selectSprite(ctx, BACK_SPRITE_POS['shoot4'], SPRITE_SIZE['shoot4'], this.backSprites);
+        case 4:
+          return this.selectSprite(ctx, BACK_SPRITE_POS['shoot5'], SPRITE_SIZE['shoot5'], this.backSprites);
+        case 5:
+          return this.selectSprite(ctx, BACK_SPRITE_POS['shoot6'], SPRITE_SIZE['shoot6'], this.backSprites);
+        case 6:
+          return this.selectSprite(ctx, BACK_SPRITE_POS['shoot7'], SPRITE_SIZE['shoot7'], this.backSprites);
+        case 7:
+          return this.selectSprite(ctx, BACK_SPRITE_POS['shoot8'], SPRITE_SIZE['shoot8'], this.backSprites);
+      }
+    }
+
+    if (this.verticalPerspective > 0) {
       this.selectSprite(ctx, BACK_SPRITE_POS['lookUp'], SPRITE_SIZE['lookUp'], this.backSprites);
     } else if (this.movingTo === 0) {
       return this.facingFront ? this.selectSprite(ctx, FRONT_SPRITE_POS['stand'], SPRITE_SIZE['stand'], this.frontSprites)
@@ -191,7 +254,11 @@ class Player {
 
   handleFrames() {
     // Increment ticks if continuously moving
-    if (this.movingTo !== 0) {
+    if (this.shooting) {
+      this.tickCount += 1;
+    } else if (this.shootingUp) {
+      this.tickCount += 1;
+    } else if (this.movingTo !== 0) {
       if (this.wasMoving === this.movingTo) {
         this.tickCount += 1;
       } else {
@@ -207,7 +274,15 @@ class Player {
     if (this.tickCount > this.ticksPerFrame) {
       this.tickCount = 0;
       this.frameCount += 1;
-      if (this.frameCount === this.maxFrameCount) this.frameCount = 0;
+      if (this.frameCount === this.maxFrameCount) {
+        this.frameCount = 0;
+        this.shooting = false;
+        this.shootingUp = false;
+        this.reloading = true;
+        setTimeout(() => {
+          this.reloading = false;
+        }, CONSTANTS.RELOAD_TIME);
+      }
     }
 
     // If the player isn't standing still, then update 'front' status
@@ -244,8 +319,9 @@ class Player {
   }
 
   selectSprite(ctx, coordinates, size, spritesImg) {
-    const width = CONSTANTS.TILE_SIZE * this.size.x;
-    const height = CONSTANTS.TILE_SIZE * this.size.y;
+    // [15, 25] is taken as the default sprite size
+    const width = CONSTANTS.TILE_SIZE * this.size.x * size[0] / 15;
+    const height = CONSTANTS.TILE_SIZE * this.size.y * size[1] / 25;
 
     // ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
     // s is source, d is destination
