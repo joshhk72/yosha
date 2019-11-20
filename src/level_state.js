@@ -11,7 +11,18 @@ class State {
   }
 
   get player() {
-    return this.actors.find(a => a.type == "player");
+    return this.actors.find(a => a.type === "player");
+  }
+
+  get enemies() {
+    return this.actors.filter(a => a.type === "enemy");
+  }
+
+  remove(actor) {
+    this.actors = this.actors.filter(a => {
+      const same = a === actor
+      return !same;
+    });
   }
 }
 

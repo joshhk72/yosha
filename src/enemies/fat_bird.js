@@ -4,7 +4,7 @@ const CONSTANTS = {
   WIDTH: 50,
   HEIGHT: 70,
   TILE_SIZE: 50,
-  TICKS_PER_FRAME: 5,
+  TICKS_PER_FRAME: 6,
   MAX_FRAME_COUNT: 7,
 };
 
@@ -50,6 +50,8 @@ class FatBird extends Enemy {
     this.idleSprites.src = '../assets/sprites/pixel/enemies/FatBird/Idle (40x48).png';
     this.hitSprites.src = '../assets/sprites/pixel/enemies/FatBird/Hit (40x48).png';
 
+    this.life = 2;
+
     this.maxFrameCount = CONSTANTS.MAX_FRAME_COUNT;
     this.ticksPerFrame = CONSTANTS.TICKS_PER_FRAME;
   }
@@ -71,7 +73,7 @@ class FatBird extends Enemy {
       this.frameCount += 1;
       if (this.frameCount === this.maxFrameCount) {
         this.frameCount = 0;
-        this.isHit = false; // may put this in a delay later...
+        if (this.isHit) this.finishGettingHit();
       }
     }
   }
@@ -106,15 +108,15 @@ class FatBird extends Enemy {
       }
     } else {
       switch (this.frameCount) {
-        case 0:
+        case 0 || 5:
           return this.selectSprite(ctx, SPRITE_POS['hit1'], SPRITE_SIZE['hit1'], this.hitSprites);
-        case 1 || 2:
+        case 1 || 6:
           return this.selectSprite(ctx, SPRITE_POS['hit2'], SPRITE_SIZE['hit2'], this.hitSprites);
-        case 3:
+        case 2 || 7:
           return this.selectSprite(ctx, SPRITE_POS['hit3'], SPRITE_SIZE['hit3'], this.hitSprites);
-        case 4:
+        case 3:
           return this.selectSprite(ctx, SPRITE_POS['hit4'], SPRITE_SIZE['hit4'], this.hitSprites);
-        case 5 || 6 || 7:
+        case 4:
           return this.selectSprite(ctx, SPRITE_POS['hit5'], SPRITE_SIZE['hit5'], this.hitSprites);
       }
     }

@@ -78,7 +78,6 @@ class Level {
     }
 
     // Step for player, and move viewport sideways if needed
-
     this.state.actors.forEach(actor => {
       if (actor.type === "player") {
         this.player.step(timeStep, this.state);
@@ -95,20 +94,32 @@ class Level {
         }
         // if not a player
 
+      // For eggs
       } else if (actor.type === "egg") {
         actor.step(timeStep, this.state);
 
+        // This will remove the eggs that go far out of bounds
         let isOutside = actor.pos.x < 0 || actor.pos.x > this.width ||
           actor.pos.y < 0 - 3 || actor.pos.y > this.height + 3; // more generous with y bounds
 
         if (isOutside) {
-          this.state.actors = this.state.actors.filter(a => {
-            const same = a === actor
-            console.log(same);
-            return !same;
+          this.state.remove(actor);
+        } else {
+          // Check collisions with existing enemies
+          let hitOne = false;
+          this.state.enemies.forEach(enemy => {
+            if (!hitOne && this.overlap(actor, enemy) && !enemy.isHit) { 
+              this.state.remove(actor)
+              enemy.getHit();
+              hitOne = true;
+            };
           });
         }
+      } else if (actor.type === "enemy") {
+        actor.step(timeStep, this.state);
+        if (actor.life === 0)  this.state.remove(actor); // they ded
 
+        // non-egg or player actors
       } else {
         actor.step(timeStep, this.state);
       }
@@ -142,6 +153,13 @@ class Level {
       distance.x < CONSTANTS.VIEWPORT_WIDTH / 2 + element.size.x 
       || distance.y > CONSTANTS.VIEWPORT_HEIGHT / 2 + element.size.y
     );
+  }
+
+  overlap(actor1, actor2) {
+    return actor1.pos.x + actor1.size.x > actor2.pos.x &&
+      actor1.pos.x < actor2.pos.x + actor2.size.x &&
+      actor1.pos.y + actor1.size.y > actor2.pos.y &&
+      actor1.pos.y < actor2.pos.y + actor2.size.y;
   }
 
   touches(pos, size, type) {

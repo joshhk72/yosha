@@ -154,6 +154,7 @@ class Player {
     if (!this.reloading && !this.shooting && !this.shootingUp) {
       this.tickCount = 0;
       this.shooting = true;
+      this.reloading = true;
       let newEgg;
       if (this.facingFront) {
         newEgg = new Egg(this.pos, new Vector(0.7 + this.vel.x / 2, -1));
@@ -168,6 +169,7 @@ class Player {
     if (!this.reloading && !this.shooting && !this.shootingUp) {
       this.tickCount = 0;
       this.shootingUp = true;
+      this.reloading = true;
       // shooting straight up
       const newEgg = new Egg(this.pos, new Vector(0, -1.8));
       state.actors.push(newEgg);
@@ -289,9 +291,8 @@ class Player {
         this.frameCount = 0;
         this.shooting = false;
         this.shootingUp = false;
-        this.reloading = true;
         setTimeout(() => {
-          this.reloading = false;
+          if (this.reloading === true) this.reloading = false;
         }, CONSTANTS.RELOAD_TIME);
       }
     }
