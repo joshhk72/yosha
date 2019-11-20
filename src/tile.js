@@ -23,7 +23,7 @@ class Tile {
     this.pos = pos;
     this.char = char;
     this.sprites = new Image();
-    this.sprites.src = '../assets/sprites/pixel_1/terrain.png';
+    this.sprites.src = '../assets/sprites/pixel/terrain.png';
   }
 
   static create(pos, category) {

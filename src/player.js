@@ -156,9 +156,9 @@ class Player {
       this.shooting = true;
       let newEgg;
       if (this.facingFront) {
-        newEgg = new Egg(this.pos, new Vector(0.7, -1));
+        newEgg = new Egg(this.pos, new Vector(0.7 + this.vel.x / 2, -1));
       } else {
-        newEgg = new Egg(this.pos, new Vector(-0.7, -1));
+        newEgg = new Egg(this.pos, new Vector(-0.7 + this.vel.x / 2, -1));
       }
       state.actors.push(newEgg);
     }

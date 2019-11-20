@@ -1,27 +1,26 @@
-class HitboxObject {
-  constructor(options) {
-    this.pos = options.pos;
-    this.vel = options.vel;
-    this.size = options.size;
+class Enemy {
+  constructor(pos, vel) {
+    this.pos = pos;
+    this.vel = vel;
+    this.isHit = false; // for small invincibility frame upon being hit (as well as animation)
+    this.frameCount = 0;
+    this.tickCount = 0;
+    // maxFrames and ticksPerFrame may differ per enemy!
+  }
+  
+  get type() {
+    return "enemy";
+  }
+
+  getHit() {
+    this.tickCount = 0;
+    this.isHit = true;
   }
 
   step(timeStep, state) {
     this.handleFrames();
     this.handleMovement(timeStep, state);
   }
-
-  draw(ctx) {
-    ctx.fillStyle = this.color;
-    ctx.beginPath();
-    ctx.arc(
-      this.pos[0],
-      this.pos[1],
-      this.radius,
-      0,
-      2 * Math.PI
-    )
-    ctx.fill();
-  }
 }
 
-module.exports = HitboxObject;
+module.exports = Enemy;

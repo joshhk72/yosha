@@ -7,6 +7,9 @@ const Vector = require('./vector');
 const State = require('./level_state');
 const _ = require('lodash');
 
+// enemies here
+const FatBird = require('./enemies/fat_bird');
+
 const CONSTANTS = {
   DIM_X: 950,
   DIM_Y: 450,
@@ -21,20 +24,22 @@ const levelChars = {
   "$": Tile,
   "D": Door,
   ".": "empty",
+  "F": FatBird,
 };
 
 class Level {
   constructor(plan) {
     this.doItOnce = false;
-    let rows = plan.trim().split("\n").map(l => [...l]);
-    this.height = rows.length;
-    this.width = rows[0].length;
     this.background = new Image();
     this.background.src = '../assets/sprites/background.png';
     this.status = "playing";
     this.actors = [];
     this.tiles = [];
     this.playerCount = 0;
+    
+    let rows = plan.trim().split("\n").map(l => [...l]);
+    this.height = rows.length;
+    this.width = rows[0].length;
 
     this.rows = rows.map((row, y) => {
       return row.map((ch, x) => {
@@ -45,6 +50,7 @@ class Level {
           this.tiles.push(newTile);
           return newTile; 
         }
+        // It's either a tile, or an actor
         const newActor = type.create(new Vector(x, y), ch);
         if (newActor.type === "player") {
           this.player = newActor;
