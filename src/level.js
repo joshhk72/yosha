@@ -4,6 +4,7 @@ const Tile = require('./tile.js');
 const Player = require('./player.js');
 const Door = require('./door.js');
 const Vector = require('./vector');
+const State = require('./level_state');
 
 const CONSTANTS = {
   DIM_X: 950,
@@ -27,11 +28,12 @@ class Level {
     let rows = plan.trim().split("\n").map(l => [...l]);
     this.height = rows.length;
     this.width = rows[0].length;
+    this.background = new Image();
+    this.background.src = '../assets/sprites/background.png';
+    this.status = "playing";
     this.actors = [];
     this.tiles = [];
     this.playerCount = 0;
-    this.background = new Image();
-    this.background.src = '../assets/sprites/background.png';
 
     this.rows = rows.map((row, y) => {
       return row.map((ch, x) => {
@@ -58,16 +60,18 @@ class Level {
 
     // Bound functions
     this.inViewPort = this.inViewPort.bind(this);
+
+    this.state = State.start(this);
   }
 
-  step() {
+  step(timeStep) {
     if (!this.doItOnce) {
       this.doItOnce = true;
-      console.log(this.tiles);
-      console.log(this.player);
-      console.log(this.viewPortCenter);
+      // console.log(this.tiles);
+      // console.log(this.player);
+      // console.log(this.viewPortCenter);
     }
-    this.player.step();
+    this.player.step(timeStep, this.state);
   }
 
   draw(ctx) {

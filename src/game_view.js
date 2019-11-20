@@ -2,6 +2,10 @@
 const Level = require("./level.js");
 const GAME_LEVELS = require("./levels");
 
+const CONSTANTS = {
+  TIME: 0.1
+};
+
 class GameView {
   constructor(ctx) {
     this.ctx = ctx;
@@ -23,7 +27,7 @@ class GameView {
       this.currentLevel.player.moveTo(0);
     }
     // this.game.step();
-    this.currentLevel.step();
+    this.currentLevel.step(CONSTANTS.TIME);
     this.currentLevel.draw(this.ctx);
   }
 
@@ -37,6 +41,7 @@ class GameView {
   bindKeyHandlers() {
     key('left', () => { this.currentLevel.player.moveTo(-1) });
     key('right', () => { this.currentLevel.player.moveTo(1) });
+    key('z', () => { this.currentLevel.player.jump() });
   }
 }
 

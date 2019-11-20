@@ -6,6 +6,9 @@ const CONSTANTS = {
   WIDTH: 50,
   HEIGHT: 70,
   TICKS_PER_FRAME: 6,
+  GRAVITY: 0.3,
+  X_SPEED: 0.4,
+  JUMP_SPEED: 1.0,
   STARTING_VEL: new Vector(0, 0),
   // STARTING_POS: new Vector(430, 380),
   MAX_FRAME_COUNT: 7,
@@ -53,7 +56,7 @@ const SPRITE_SIZE = {
 class Player {
   constructor(pos) {
     // this.pos = CONSTANTS.STARTING_POS;
-    this.pos = pos.minus(new Vector(0, 0.4));
+    this.pos = pos.minus(new Vector(0, 0.41));
     this.vel = CONSTANTS.STARTING_VEL;
     this.width = CONSTANTS.WIDTH;
     this.height = CONSTANTS.HEIGHT;
@@ -72,6 +75,9 @@ class Player {
     this.maxFrameCount = CONSTANTS.MAX_FRAME_COUNT;
     this.tickCount = 0;
     this.ticksPerFrame = CONSTANTS.TICKS_PER_FRAME;
+
+    this.handleFrames = this.handleFrames.bind(this);
+    this.handleMovement = this.handleMovement.bind(this);
   }
 
   static create(pos) {
@@ -88,6 +94,26 @@ class Player {
 
   moveTo(num) {
     this.movingTo = num;
+    switch (num) {
+      case 1:
+        this.vel.x = CONSTANTS.X_SPEED;
+        break;
+      case -1:
+        this.vel.x = -CONSTANTS.X_SPEED;
+        break;
+      case 0:
+        this.vel.x = 0;
+        break;
+    }
+  }
+
+  jump() {
+    console.log('jump');
+    console.log(this.vel);
+    if (!this.jumping) {
+      this.vel.y = -CONSTANTS.JUMP_SPEED;
+      this.jumping = true;
+    }
   }
 
   draw(ctx, viewPortCenter) {
@@ -137,7 +163,7 @@ class Player {
     }
   }
 
-  step() {
+  handleFrames() {
     // Increment ticks if continuously moving
     if (this.wasMoving === this.movingTo) {
       this.tickCount += 1;
@@ -150,7 +176,7 @@ class Player {
     if (this.tickCount > this.ticksPerFrame) {
       this.tickCount = 0;
       this.frameCount += 1;
-      if (this.frameCount === this.maxFrameCount) this.frameCount = 0; 
+      if (this.frameCount === this.maxFrameCount) this.frameCount = 0;
     }
 
     // If the player isn't standing still, then update 'front' status
@@ -158,6 +184,30 @@ class Player {
 
     // Update this for checks done during the next step
     this.wasMoving = this.movingTo;
+  }
+
+  handleMovement(timeStep, state) {
+    const xVel = this.vel.x;
+    const xMoveTo = this.pos.plus(new Vector(xVel * timeStep, 0));
+    if (!state.level.touches(xMoveTo, this.size, "wall") && !state.level.touches(xMoveTo, this.size, "tile") ) {
+      this.pos = xMoveTo;
+    }
+
+    let yVel = this.vel.y + timeStep * CONSTANTS.GRAVITY;
+    const yMoveTo = this.pos.plus(new Vector(0, yVel * timeStep));
+    if (!state.level.touches(yMoveTo, this.size, "wall") && !state.level.touches(yMoveTo, this.size, "tile")) {
+      this.pos = yMoveTo;
+    } else if (yMoveTo.y > this.pos.y) {
+      yVel = 0;
+      this.jumping = false;
+    }
+
+    this.vel = new Vector(xVel, yVel);
+  }
+
+  step(timeStep, state) {
+    this.handleFrames();
+    this.handleMovement(timeStep, state);
   }
 
   selectSprite(ctx, coordinates, size, spritesImg) {

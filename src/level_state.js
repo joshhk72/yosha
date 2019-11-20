@@ -1,5 +1,3 @@
-// credit to https://eloquentjavascript.net/16_game.html
-
 class State {
   constructor(level, actors, status) {
     this.level = level;
