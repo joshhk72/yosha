@@ -27,10 +27,16 @@ const levelChars = {
 };
 
 class Level {
-  constructor(plan) {
+  constructor(plan, music) {
     this.doItOnce = false;
     this.background = new Image();
     this.background.src = '../assets/sprites/background.png';
+    this.music = music;
+    this.music.loop = true;
+    this.music.currentTime = 0;
+    this.music.volume = 0.3;
+    this.music.play();
+    this.muted = false;
     this.status = "playing";
     this.actors = [];
     this.tiles = [];
@@ -67,6 +73,16 @@ class Level {
     // Bound functions
     this.inViewPort = this.inViewPort.bind(this);
     this.state = State.start(this);
+  }
+
+  mute() {
+    this.music.pause();
+    this.state.actors.forEach(actor => actor.mute());
+  }
+
+  unmute() {
+    this.music.play();
+    this.state.actors.forEach(actor => actor.unmute());
   }
 
   step(timeStep) {

@@ -1,7 +1,7 @@
 //const Game = require("./game.js");
 const Level = require("./level.js");
 const StartScreen = require("./start/screen");
-const GAME_LEVELS = require("./levels");
+const { GAME_LEVELS, MUSIC_LIST } = require("./levels");
 
 const CONSTANTS = {
   TIME: 0.1,
@@ -15,12 +15,14 @@ class Game {
     this.playing = false;
     this.over = false;
     this.paused = false;
-    this.currentLevel = new Level(GAME_LEVELS[0]); // default but changes;
+    this.muted = false;
+    this.currentLevel = undefined; // default but changes;
     this.render = this.render.bind(this);
     this.step = this.step.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.selectLevel = this.selectLevel.bind(this);
     this.pause = this.pause.bind(this);
+    this.mute = this.mute.bind(this);
 
     // prevent scrolling on window with space or arrow keys!
     window.addEventListener("keydown", function (e) {
@@ -32,20 +34,37 @@ class Game {
     this.startScreen = new StartScreen(this.selectLevel);
   }
 
-  selectLevel(level) {
-    this.currentLevel = new Level(level);
+  selectLevel(level, music) {
+    this.currentLevel = new Level(level, music);
     this.playing = true;
     this.render();
+  }
+
+  mute() {
+    const button = document.getElementById("mute");
+    if (this.playing && !this.muted && !this.over) {
+      this.muted = true;
+      this.currentLevel.mute();
+      button.classList.remove("fa-volume-down");
+      button.classList.add("fa-volume-mute");
+    } else if (this.playing && this.muted && !this.over) {
+      this.muted = false;
+      this.currentLevel.unmute();
+      button.classList.remove("fa-volume-mute");
+      button.classList.add("fa-volume-down");
+    }
   }
 
   pause() {
     const button = document.getElementById("pause");
     if (this.playing && !this.paused && !this.over) {
       this.paused = true;
+      this.currentLevel.mute()
       button.classList.remove("fa-play");
       button.classList.add("fa-pause");
     } else if (this.playing && this.paused && !this.over) {
       this.paused = false;
+      if (!this.muted) this.currentLevel.unmute();
       button.classList.remove("fa-pause");
       button.classList.add("fa-play");
       this.render();
@@ -90,7 +109,9 @@ class Game {
 
   bindClickHandlers() {
     const pauseButton = document.getElementById("pause");
+    const muteButton = document.getElementById("mute");
     pauseButton.onclick = () => this.pause();
+    muteButton.onclick = () => this.mute();
   }
 
   bindKeyHandlers() {
@@ -99,6 +120,7 @@ class Game {
     key('up', () => { this.currentLevel.player.lookVertically(1) });
     key('down', () => { this.currentLevel.player.lookVertically(-1) });
     key('p', () => this.pause() );
+    key('m', () => this.mute());
     key('z', () => { this.currentLevel.player.jump() });
     key('x', () => { 
       if (!key.isPressed("up")) {

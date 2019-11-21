@@ -1,13 +1,10 @@
-const GAME_LEVELS = require("../levels");
-
-// fontawesome mute "fas fa-volume-mute"
-// fontawesome sound "fas fa-volume-down"
+const { GAME_LEVELS, MUSIC_LIST } = require("../levels");
 
 // Note: this is super hard to do without React
 // I have gained a new appreciation for React/other similar libraries.
 
 class Screen {
-  constructor(selectLevel) {
+  constructor(selectLevel, selectMusic) {
     this.startButtons = document.getElementById("start-button-container");
     this.startLogo = document.getElementById("start-logo");
     this.levelSelectButtonsScreen = document.getElementById("level-select-button-container");
@@ -17,6 +14,7 @@ class Screen {
     this.howPlayScreen = document.getElementById('how-play-container');
 
     this.levels = GAME_LEVELS;
+    this.musicList = MUSIC_LIST;
     this.selectLevel = selectLevel;
 
     this.exitHowPlayScreen = this.exitHowPlayScreen.bind(this);
@@ -79,6 +77,7 @@ class Screen {
     const firstIdx = 0 + (page - 1) * 3;
     const lastIdx = firstIdx + 3;
     const levels = this.levels.slice(firstIdx, lastIdx);
+    const musics = this.musicList.slice(firstIdx, lastIdx);
     while (this.levelSelectButtonsScreen.firstChild) {
       this.levelSelectButtonsScreen.removeChild(this.levelSelectButtonsScreen.firstChild);
     }
@@ -94,7 +93,7 @@ class Screen {
       button.innerHTML = `Level ${firstIdx + i + 1}`;
       button.onclick = () => {
         this.startScreen.style.display = "none";
-        this.selectLevel(level);
+        this.selectLevel(level, musics[i]);
       };
       button.classList.add("level-select-button");
       this.levelSelectButtonsScreen.appendChild(button);

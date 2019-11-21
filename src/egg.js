@@ -50,6 +50,10 @@ class Egg {
       xOnScreen, yOnScreen,
       CONSTANTS.WIDTH, CONSTANTS.HEIGHT);
   }
+
+  mute() { }
+
+  unmute() { }
 }
 
 module.exports = Egg;

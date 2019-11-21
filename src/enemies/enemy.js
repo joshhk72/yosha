@@ -13,6 +13,10 @@ class Enemy {
     return "enemy";
   }
 
+  mute() { }
+
+  unmute() { }
+
   getHit() {
     this.tickCount = 0;
     this.frameCount = 0;

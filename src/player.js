@@ -126,6 +126,7 @@ class Player {
     this.shooting = false;
     this.shootingUp = false; // these two are differentiated so that animations can be differentiated
     
+    this.muted = false;
     // http://www.williammalone.com/articles/create-html5-canvas-javascript-sprite-animation/
     this.frameCount = 0;
     this.maxFrameCount = CONSTANTS.MAX_FRAME_COUNT;
@@ -138,6 +139,14 @@ class Player {
 
   static create(pos) {
     return new Player(pos);
+  }
+
+  mute() {
+    this.muted = true;
+  }
+
+  unmute() {
+    this.muted = false;
   }
 
   get type() {

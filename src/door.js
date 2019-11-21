@@ -20,6 +20,10 @@ class Door {
   draw() {
 
   }
+
+  mute() { }
+
+  unmute() { }
 }
 
 module.exports = Door;
