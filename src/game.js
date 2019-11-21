@@ -26,6 +26,7 @@ class Game {
 
   selectLevel(level) {
     this.currentLevel = new Level(level);
+    this.render();
   }
 
   start() {

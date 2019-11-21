@@ -48,11 +48,17 @@ class Screen {
       this.levelSelectButtons.removeChild(this.levelSelectButtons.firstChild);
     }
 
+    const back = document.createElement("BUTTON");
+    back.innerHTML = "Back to Main";
+    back.classList.add("back-to-main");
+    back.onclick = () => this.exitLevelSelect();
+    this.levelSelectButtons.appendChild(back);
+
     levels.forEach((level, i) => {
       const button = document.createElement("BUTTON");
       button.innerHTML = `Level ${firstIdx + i + 1}`;
       button.onclick = () => {
-        this.start.display = "none";
+        this.startScreen.style.display = "none";
         this.selectLevel(level);
       };
       button.classList.add("level-select-button");

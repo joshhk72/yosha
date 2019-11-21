@@ -50,6 +50,7 @@ canvas {
 
 #level-select-button-container {
   display: none;
+  position: relative;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -63,6 +64,12 @@ canvas {
 
 .level-page-button:first-of-type {
   margin-right: 0.5em;
+}
+
+.back-to-main {
+  position: absolute;
+  left: 0.5em;
+  top: 0.5em;
 }
 
 #start button {
