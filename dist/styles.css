@@ -6,3 +6,26 @@ canvas {
   image-rendering: pixelated;                 /* Awesome future-browsers       */
   -ms-interpolation-mode: nearest-neighbor;   /* IE                            */
 }
+
+#canvas {
+  position: relative;
+  display: block;
+  margin: 0 auto;
+}
+
+#header {
+  text-align: center;
+  margin: 0.7em auto;
+  font-size: 32px;
+}
+
+#start {
+  position: absolute;
+  display: block;
+  height: 450px;
+  width: 950px;
+  background-color: black;
+  left: 50%;
+  margin-left: -475px;
+  z-index: 2;
+}

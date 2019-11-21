@@ -25,6 +25,13 @@ const FRONT_SPRITE_POS = {
   walk6: [613, 5],
   walk7: [596, 4],
   walk8: [579, 4],
+  hit1: [135, 8],
+  hit2: [117, 8],
+  hit3: [97, 7],
+  hit4: [79, 7],
+  hit5: [57, 10],
+  hit6: [35, 9],
+  hit7: [14, 10],
   shoot1: [552, 5],
   shoot2: [533, 4],
   shoot3: [510, 4],
@@ -49,6 +56,13 @@ const BACK_SPRITE_POS = {
   walk6: [57, 4],
   walk7: [40, 4],
   walk8: [22, 4],
+  hit1: [50, 7],
+  hit2: [68, 7],
+  hit3: [88, 6],
+  hit4: [106, 6],
+  hit5: [128, 9],
+  hit6: [147, 8],
+  hit7: [169, 9],
   shoot1: [167, 5],
   shoot2: [187, 4],
   shoot3: [207, 4],
@@ -70,6 +84,13 @@ const SPRITE_SIZE = {
   jump1: [17, 26],
   jump2: [19, 26],
   fall: [21, 26],
+  hit1: [15, 25],
+  hit2: [15, 25],
+  hit3: [15, 25],
+  hit4: [15, 25],
+  hit5: [15, 23],
+  hit6: [18, 25],
+  hit7: [17, 24],
   shoot1: [17, 24],
   shoot2: [16, 25],
   shoot3: [19, 25],
@@ -129,17 +150,19 @@ class Player {
 
   // moveTo determines x-direction movement
   moveTo(num) {
-    this.movingTo = num;
-    switch (num) {
-      case 1:
-        this.vel.x = CONSTANTS.X_SPEED;
-        break;
-      case -1:
-        this.vel.x = -CONSTANTS.X_SPEED;
-        break;
-      case 0:
-        this.vel.x = 0;
-        break;
+    if (!this.isHit) { // if hit, you don't control your own velocity (for a bit);
+      this.movingTo = num;
+      switch (num) {
+        case 1:
+          this.vel.x = CONSTANTS.X_SPEED;
+          break;
+        case -1:
+          this.vel.x = -CONSTANTS.X_SPEED;
+          break;
+        case 0:
+          this.vel.x = 0;
+          break;
+      }
     }
   }
 
@@ -148,10 +171,35 @@ class Player {
   }
 
   jump() {
-    if (!this.jumping && this.onGround) {
+    if (!this.isHit && !this.jumping && this.onGround) {
       this.vel.y = -CONSTANTS.JUMP_SPEED;
       this.jumping = true;
     }
+  }
+
+  getHit(vel, state) {
+    this.tickCount = 0;
+    this.frameCount = 0;
+    this.isHit = true;
+    this.vel = vel;
+    setTimeout(() => {
+      // Movement must continue after use is hit (bit of a hacky fix, but...)
+      if ((!key.isPressed('left') && !key.isPressed('right')) || (key.isPressed('left') && key.isPressed('right'))) {
+        this.vel = new Vector(0, this.vel.y);
+      } else if (key.isPressed('left')) {
+        this.vel = new Vector(-CONSTANTS.X_SPEED, this.vel.y);
+      } else if (key.isPressed('right')) {
+        this.vel = new Vector(CONSTANTS.X_SPEED, this.vel.y);
+      }
+      // this.vel = new Vector(0, this.vel.y);
+      state.life -= 1;
+      this.isHit = false;
+      
+    }, 600); // can either do it here or elsewhere;
+  }
+
+  recoil(vel) {
+    this.vel = vel;
   }
 
   shoot(state) {
@@ -184,6 +232,40 @@ class Player {
 
   draw(ctx, viewPortCenter) {
     this.viewPortCenter = viewPortCenter;
+
+    if (this.isHit && this.facingFront) {
+      if ([0].includes(this.frameCount)) {
+        return this.selectSprite(ctx, FRONT_SPRITE_POS['hit2'], SPRITE_SIZE['hit2'], this.frontHitSprites);
+      } else if ([1].includes(this.frameCount)) {
+        return this.selectSprite(ctx, FRONT_SPRITE_POS['hit3'], SPRITE_SIZE['hit3'], this.frontHitSprites);
+      } else if ([2].includes(this.frameCount)) {
+        return this.selectSprite(ctx, FRONT_SPRITE_POS['hit4'], SPRITE_SIZE['hit4'], this.frontHitSprites);
+      } else if ([3].includes(this.frameCount)) {
+        return this.selectSprite(ctx, FRONT_SPRITE_POS['hit5'], SPRITE_SIZE['hit5'], this.frontHitSprites);
+      } else if ([4].includes(this.frameCount)) {
+        return this.selectSprite(ctx, FRONT_SPRITE_POS['hit6'], SPRITE_SIZE['hit6'], this.frontHitSprites);
+      } else if ([5].includes(this.frameCount)) {
+        return this.selectSprite(ctx, FRONT_SPRITE_POS['hit7'], SPRITE_SIZE['hit7'], this.frontHitSprites);
+      } else if ([6, 7].includes(this.frameCount)) {
+        return this.selectSprite(ctx, FRONT_SPRITE_POS['hit1'], SPRITE_SIZE['hit1'], this.frontHitSprites);
+      } 
+    } else if (this.isHit && !this.facingFront) {
+      if ([0].includes(this.frameCount)) {
+        return this.selectSprite(ctx, BACK_SPRITE_POS['hit1'], SPRITE_SIZE['hit1'], this.backHitSprites);
+      } else if ([1].includes(this.frameCount)) {
+        return this.selectSprite(ctx, BACK_SPRITE_POS['hit2'], SPRITE_SIZE['hit2'], this.backHitSprites);
+      } else if ([2].includes(this.frameCount)) {
+        return this.selectSprite(ctx, BACK_SPRITE_POS['hit3'], SPRITE_SIZE['hit3'], this.backHitSprites);
+      } else if ([3].includes(this.frameCount)) {
+        return this.selectSprite(ctx, BACK_SPRITE_POS['hit4'], SPRITE_SIZE['hit4'], this.backHitSprites);
+      } else if ([4].includes(this.frameCount)) {
+        return this.selectSprite(ctx, BACK_SPRITE_POS['hit5'], SPRITE_SIZE['hit5'], this.backHitSprites);
+      } else if ([5].includes(this.frameCount)) {
+        return this.selectSprite(ctx, BACK_SPRITE_POS['hit6'], SPRITE_SIZE['hit6'], this.backHitSprites);
+      } else if ([6, 7].includes(this.frameCount)) {
+        return this.selectSprite(ctx, BACK_SPRITE_POS['hit7'], SPRITE_SIZE['hit7'], this.backHitSprites);
+      } 
+    }
 
     if (this.shooting && this.facingFront) {
       switch (this.frameCount) {

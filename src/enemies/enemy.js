@@ -17,6 +17,8 @@ class Enemy {
     this.tickCount = 0;
     this.frameCount = 0;
     this.isHit = true;
+    this.startedMoving = false; // this is usually set to true when the enemy comes within the viewport
+
     // this.life is decremented in the below function, since the animation must happen first!
   }
 

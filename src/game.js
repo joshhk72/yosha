@@ -3,10 +3,12 @@ const Level = require("./level.js");
 const GAME_LEVELS = require("./levels");
 
 const CONSTANTS = {
-  TIME: 0.1
+  TIME: 0.1,
+  HEIGHT: 450,
+  WIDTH: 950,
 };
 
-class GameView {
+class Game {
   constructor(ctx) {
     this.ctx = ctx;
     this.currentLevel = new Level(GAME_LEVELS[0]);
@@ -15,6 +17,7 @@ class GameView {
     this.paused = false;
     this.render = this.render.bind(this);
     this.step = this.step.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
   start() {
@@ -29,7 +32,7 @@ class GameView {
     if ((!key.isPressed('up') && !key.isPressed('down')) || (key.isPressed('up') && key.isPressed('down'))) {
       this.currentLevel.player.lookVertically(0);
     }
-    // this.game.step();
+    
     this.currentLevel.step(CONSTANTS.TIME);
     this.currentLevel.draw(this.ctx);
   }
@@ -38,6 +41,17 @@ class GameView {
     if (!this.over && !this.paused) {
       requestAnimationFrame(this.render);
       this.step();
+    }
+  }
+
+  handleClick(e) {
+    // This function was made when considering a Canvas based game-start UI.
+    // But a DOM UI will work just fine (since this app is mostly for use on a browser!)
+    const canvas = document.getElementById("canvas");
+    const mouseX = e.pageX - canvas.offsetLeft;
+    const mouseY = e.pageY - canvas.offsetTop;
+    if (mouseX >= 0 && mouseX <= CONSTANTS.WIDTH && mouseY >= 0 && mouseY <= CONSTANTS.HEIGHT) {
+      console.log(mouseX, mouseY); 
     }
   }
 
@@ -54,7 +68,9 @@ class GameView {
         this.currentLevel.player.shootUp(this.currentLevel.state);
       }
     });
+    
+    document.addEventListener("click", this.handleClick, false);
   }
 }
 
-module.exports = GameView;
+module.exports = Game;

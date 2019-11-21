@@ -1,10 +1,12 @@
 const Vector = require('../vector');
 
+// This is a useless enemy that does not move, be careful not to walk into it though!
+
 const CONSTANTS = {
   WIDTH: 50,
   HEIGHT: 70,
   TILE_SIZE: 50,
-  TICKS_PER_FRAME: 3,
+  TICKS_PER_FRAME: 2,
   MAX_FRAME_COUNT: 15,
 };
 
@@ -142,10 +144,10 @@ class FatBird extends Enemy {
     const width = CONSTANTS.TILE_SIZE * this.size.x * size[0] / 35;
     const height = CONSTANTS.TILE_SIZE * this.size.y * size[1] / 35;
 
-    const extraHeight = -3;
-    // Hopefully the extraHeight doesn't make hitboxes deceptive!
+    // const extraHeight = -3;
+
     const xOnScreen = 950 / 2 + 50 * (this.pos.x - this.viewPortCenter.x);
-    const yOnScreen = 450 / 2 + 50 * (this.pos.y - this.viewPortCenter.y) + extraHeight;
+    const yOnScreen = 450 / 2 + 50 * (this.pos.y - this.viewPortCenter.y); // + extraHeight;
 
     ctx.drawImage(spritesImg,
       coordinates[0], coordinates[1],

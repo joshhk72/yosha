@@ -70,29 +70,36 @@ class Level {
   }
 
   step(timeStep) {
-    if (!this.doItOnce) { // for bug-testing
-      this.doItOnce = true;
-      // console.log(this.tiles);
-      // console.log(this.player);
-      // console.log(this.viewPortCenter);
-    }
 
-    // Step for player, and move viewport sideways if needed
+    // Step for player
     this.state.actors.forEach(actor => {
       if (actor.type === "player") {
-        this.player.step(timeStep, this.state);
-        if (this.player.pos.x > this.viewPortCenter.x + 3) {
-          this.viewPortCenter.x = this.player.pos.x - 3;
+        this.state.player.step(timeStep, this.state);
+
+        // move viewport if needed
+        if (this.state.player.pos.x > this.viewPortCenter.x + 3) {
+          this.viewPortCenter.x = this.state.player.pos.x - 3;
         } else if (this.player.pos.x < this.viewPortCenter.x - 3) {
-          this.viewPortCenter.x = this.player.pos.x + 3;
+          this.viewPortCenter.x = this.state.player.pos.x + 3;
         }
     
-        if (this.player.pos.y > this.viewPortCenter.y + 2) {
-          this.viewPortCenter.y = this.player.pos.y - 2;
-        } else if (this.player.pos.y < this.viewPortCenter.y - 2) {
-          this.viewPortCenter.y = this.player.pos.y + 2;
+        if (this.state.player.pos.y > this.viewPortCenter.y + 2) {
+          this.viewPortCenter.y = this.state.player.pos.y - 2;
+        } else if (this.state.player.pos.y < this.viewPortCenter.y - 2) {
+          this.viewPortCenter.y = this.state.player.pos.y + 2;
         }
-        // if not a player
+
+        let hitOnce = false;
+
+        // check if enemy hit player
+        this.state.enemies.forEach(enemy => {
+          if (!hitOnce && this.overlap(this.state.player, enemy) && !this.state.player.isHit) {
+            const xDiff = this.state.player.pos.x - enemy.pos.x;
+            const recoilVel = xDiff/Math.abs(xDiff) * 0.3;
+            this.state.player.getHit(new Vector(recoilVel, 0.1), this.state);
+            hitOnce = true;
+          };
+        });
 
       // For eggs
       } else if (actor.type === "egg") {

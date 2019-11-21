@@ -3,6 +3,11 @@ class State {
     this.level = level;
     this.actors = actors;
     this.status = status;
+    this.life = 5; // life is health, hp, etc.
+
+    this.win = false;
+    this.lose = false;
+    
     // tiles don't need to be in state because they don't change (yet...)
   }
 

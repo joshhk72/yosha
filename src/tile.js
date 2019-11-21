@@ -12,7 +12,7 @@ const SPRITE_POS = {
 
 const SPRITE_SIZE = {
   grass1: [44, 45],
-  dirt1: [44, 30]
+  dirt1: [42, 30]
 }
 
 class Tile {
