@@ -17,6 +17,8 @@ class Game {
     this.won = false;
     this.paused = false;
     this.muted = false;
+    this.victoryMusic = new Audio('../assets/audio/victory.wav');
+    this.victoryMusic.volume = 0.3;
     this.currentLevel = undefined; // default but changes;
     this.render = this.render.bind(this);
     this.step = this.step.bind(this);
@@ -75,6 +77,20 @@ class Game {
     }
   }
 
+  celebrateWin() {
+    this.playing = false;
+    this.currentLevel.mute();
+    this.victoryMusic.currentTime = 0;
+    this.victoryMusic.play();
+    console.log("You win!");
+  }
+
+  mournLoss() {
+    this.playing = false;
+    this.currentLevel.mute();
+    console.log("You lose :(");
+  }
+
   start() {
     this.bindKeyHandlers();
     this.bindClickHandlers();
@@ -90,7 +106,8 @@ class Game {
     }
     
     if (this.currentLevel.won) { 
-      this.won = true 
+      this.won = true;
+      this.celebrateWin();
     };
     this.currentLevel.step(CONSTANTS.TIME);
     this.currentLevel.draw(this.ctx);
@@ -122,17 +139,19 @@ class Game {
   }
 
   bindKeyHandlers() {
-    key('left', () => { this.currentLevel.state.player.moveTo(-1) });
-    key('right', () => { this.currentLevel.state.player.moveTo(1) });
-    key('up', () => { 
+    key('left', () => { if (this.playing) this.currentLevel.state.player.moveTo(-1) });
+    key('right', () => { if (this.playing) this.currentLevel.state.player.moveTo(1) });
+    key('up', () => {
+      if (!this.playing) return; 
       this.currentLevel.state.player.checkDoor(this.currentLevel.state); 
       this.currentLevel.state.player.lookVertically(1) 
     });
-    key('down', () => { this.currentLevel.state.player.lookVertically(-1) });
+    key('down', () => { if (this.playing) this.currentLevel.state.player.lookVertically(-1) });
     key('p', () => this.pause() );
     key('m', () => this.mute());
-    key('z', () => { this.currentLevel.state.player.jump() });
-    key('x', () => { 
+    key('z', () => { if (this.playing) this.currentLevel.state.player.jump() });
+    key('x', () => {
+      if (!this.playing) return; 
       if (!key.isPressed("up")) {
         this.currentLevel.state.player.shoot(this.currentLevel.state);
       } else {
