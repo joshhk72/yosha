@@ -36,6 +36,7 @@ class Game {
 
   selectLevel(level, music) {
     this.currentLevel = new Level(level, music);
+    if (this.muted) this.currentLevel.mute();
     this.playing = true;
     this.render();
   }
@@ -115,18 +116,18 @@ class Game {
   }
 
   bindKeyHandlers() {
-    key('left', () => { this.currentLevel.player.moveTo(-1) });
-    key('right', () => { this.currentLevel.player.moveTo(1) });
-    key('up', () => { this.currentLevel.player.lookVertically(1) });
-    key('down', () => { this.currentLevel.player.lookVertically(-1) });
+    key('left', () => { this.currentLevel.state.player.moveTo(-1) });
+    key('right', () => { this.currentLevel.state.player.moveTo(1) });
+    key('up', () => { this.currentLevel.state.player.lookVertically(1) });
+    key('down', () => { this.currentLevel.state.player.lookVertically(-1) });
     key('p', () => this.pause() );
     key('m', () => this.mute());
-    key('z', () => { this.currentLevel.player.jump() });
+    key('z', () => { this.currentLevel.state.player.jump() });
     key('x', () => { 
       if (!key.isPressed("up")) {
-        this.currentLevel.player.shoot(this.currentLevel.state);
+        this.currentLevel.state.player.shoot(this.currentLevel.state);
       } else {
-        this.currentLevel.player.shootUp(this.currentLevel.state);
+        this.currentLevel.state.player.shootUp(this.currentLevel.state);
       }
     });
     

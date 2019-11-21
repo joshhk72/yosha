@@ -35,17 +35,17 @@ class Level {
     this.music.loop = true;
     this.music.currentTime = 0;
     this.music.volume = 0.3;
-    this.music.play();
     this.muted = false;
     this.status = "playing";
     this.actors = [];
     this.tiles = [];
-    this.playerCount = 0;
     
     let rows = plan.trim().split("\n").map(l => [...l]);
     this.height = rows.length;
     this.width = rows[0].length;
-
+    
+    let playerCount = 0;
+    let doorCount = 0;
     this.rows = rows.map((row, y) => {
       return row.map((ch, x) => {
         let type = levelChars[ch];
@@ -59,7 +59,9 @@ class Level {
         const newActor = type.create(new Vector(x, y), ch);
         if (newActor.type === "player") {
           this.player = newActor;
-          this.playerCount += 1;
+          playerCount += 1;
+        } else if (newActor.type === "door") {
+          doorCount += 1;
         }
         this.actors.push(
           newActor);
@@ -67,12 +69,14 @@ class Level {
       });
     });
 
-    if (this.playerCount !== 1) throw new Error('Every level must have exactly one player!');
+    if (playerCount !== 1) throw new Error('Every level must have exactly one player!');
+    if (doorCount !== 1) throw new Error('Every level must have exactly one door!');
     this.scrollPlayerIntoView.bind(this)();
 
     // Bound functions
     this.inViewPort = this.inViewPort.bind(this);
     this.state = State.start(this);
+    this.music.play();
   }
 
   mute() {

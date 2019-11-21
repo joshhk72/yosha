@@ -6,6 +6,9 @@ class Enemy {
     this.life = 1; // default, but enemies can have different amounts of lives
     this.frameCount = 0;
     this.tickCount = 0;
+    this.muted = false;
+    this.hitSound = new Audio('../assets/audio/enemy-hit.wav');
+    this.hitSound.volume = 0.5;
     // maxFrames and ticksPerFrame may differ per enemy!
   }
   
@@ -13,16 +16,23 @@ class Enemy {
     return "enemy";
   }
 
-  mute() { }
+  mute() {
+    this.muted = true;
+  }
 
-  unmute() { }
+  unmute() {
+    this.muted = false;
+  }
 
   getHit() {
     this.tickCount = 0;
     this.frameCount = 0;
     this.isHit = true;
     this.startedMoving = false; // this is usually set to true when the enemy comes within the viewport
-
+    if (!this.muted) {
+      this.hitSound.currentTime = 0.2;
+      this.hitSound.play();
+    }
     // this.life is decremented in the below function, since the animation must happen first!
   }
 
