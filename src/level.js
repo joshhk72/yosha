@@ -28,7 +28,7 @@ const levelChars = {
 
 class Level {
   constructor(plan, music) {
-    this.doItOnce = false;
+    this.won = false;
     this.background = new Image();
     this.background.src = '../assets/sprites/background.png';
     this.music = music;
@@ -75,8 +75,13 @@ class Level {
 
     // Bound functions
     this.inViewPort = this.inViewPort.bind(this);
+    this.win = this.win.bind(this);
     this.state = State.start(this);
     this.music.play();
+  }
+
+  win() {
+    this.won = true;
   }
 
   mute() {
@@ -151,6 +156,9 @@ class Level {
         actor.step(timeStep, this.state);
       }
     })
+
+    // check if enemies are left
+    if (!this.state.enemiesExist) this.state.door.open();
   }
 
   draw(ctx) {
@@ -163,8 +171,11 @@ class Level {
       };
     });
 
+    // door draws first!
+    this.state.door.draw(ctx, this.viewPortCenter);
+
     this.state.actors.forEach(actor => {
-      if (this.inViewPort(actor)) {
+      if (this.inViewPort(actor) && actor.type !== "door") {
         actor.draw(ctx, this.viewPortCenter);
       };
     })

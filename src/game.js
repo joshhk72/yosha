@@ -13,7 +13,8 @@ class Game {
   constructor(ctx) {
     this.ctx = ctx;
     this.playing = false;
-    this.over = false;
+    this.lost = false;
+    this.won = false;
     this.paused = false;
     this.muted = false;
     this.currentLevel = undefined; // default but changes;
@@ -36,6 +37,8 @@ class Game {
 
   selectLevel(level, music) {
     this.currentLevel = new Level(level, music);
+    this.won = false;
+    this.lost = false;
     if (this.muted) this.currentLevel.mute();
     this.playing = true;
     this.render();
@@ -43,12 +46,12 @@ class Game {
 
   mute() {
     const button = document.getElementById("mute");
-    if (this.playing && !this.muted && !this.over) {
+    if (this.playing && !this.muted && !this.lost && !this.won) {
       this.muted = true;
       this.currentLevel.mute();
       button.classList.remove("fa-volume-down");
       button.classList.add("fa-volume-mute");
-    } else if (this.playing && this.muted && !this.over) {
+    } else if (this.playing && this.muted && !this.lost && !this.won) {
       this.muted = false;
       this.currentLevel.unmute();
       button.classList.remove("fa-volume-mute");
@@ -58,12 +61,12 @@ class Game {
 
   pause() {
     const button = document.getElementById("pause");
-    if (this.playing && !this.paused && !this.over) {
+    if (this.playing && !this.paused && !this.lost && !this.won) {
       this.paused = true;
       this.currentLevel.mute()
       button.classList.remove("fa-play");
       button.classList.add("fa-pause");
-    } else if (this.playing && this.paused && !this.over) {
+    } else if (this.playing && this.paused && !this.lost && !this.won) {
       this.paused = false;
       if (!this.muted) this.currentLevel.unmute();
       button.classList.remove("fa-pause");
@@ -86,12 +89,15 @@ class Game {
       this.currentLevel.player.lookVertically(0);
     }
     
+    if (this.currentLevel.won) { 
+      this.won = true 
+    };
     this.currentLevel.step(CONSTANTS.TIME);
     this.currentLevel.draw(this.ctx);
   }
 
   render() {
-    if (!this.over && !this.paused) {
+    if (!this.won && !this.lost && !this.paused) {
       requestAnimationFrame(this.render);
       this.step();
     }
@@ -118,7 +124,10 @@ class Game {
   bindKeyHandlers() {
     key('left', () => { this.currentLevel.state.player.moveTo(-1) });
     key('right', () => { this.currentLevel.state.player.moveTo(1) });
-    key('up', () => { this.currentLevel.state.player.lookVertically(1) });
+    key('up', () => { 
+      this.currentLevel.state.player.checkDoor(this.currentLevel.state); 
+      this.currentLevel.state.player.lookVertically(1) 
+    });
     key('down', () => { this.currentLevel.state.player.lookVertically(-1) });
     key('p', () => this.pause() );
     key('m', () => this.mute());

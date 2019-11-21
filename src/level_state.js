@@ -19,8 +19,16 @@ class State {
     return this.actors.find(a => a.type === "player");
   }
 
+  get door() {
+    return this.actors.find(a => a.type === "door");
+  }
+
   get enemies() {
     return this.actors.filter(a => a.type === "enemy");
+  }
+
+  get enemiesExist() {
+    return this.actors.some(a => a.type === "enemy");
   }
 
   remove(actor) {

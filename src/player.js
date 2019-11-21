@@ -144,6 +144,7 @@ class Player {
 
     this.handleFrames = this.handleFrames.bind(this);
     this.handleMovement = this.handleMovement.bind(this);
+    this.checkDoor = this.checkDoor.bind(this);
   }
 
   static create(pos) {
@@ -164,6 +165,12 @@ class Player {
 
   get size() {
     return new Vector(0.8, 1.333);
+  }
+
+  checkDoor(state) {
+    if (state.door.levelComplete && state.level.overlap(state.player, state.door)) {
+      state.level.won = true;
+    }
   }
 
   // moveTo determines x-direction movement
