@@ -11,12 +11,7 @@ canvas {
   position: relative;
   display: block;
   margin: 0 auto;
-}
-
-#header {
-  text-align: center;
-  margin: 0.7em auto;
-  font-size: 32px;
+  margin-top: 2em;
 }
 
 #start {
@@ -28,4 +23,58 @@ canvas {
   left: 50%;
   margin-left: -475px;
   z-index: 2;
+}
+
+#start-logo {
+  width: 330px;
+  height: 130px;
+  margin: 0 auto;
+  margin-top: 7em;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+}
+
+#start-button-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 1.2em;
+}
+
+#level-select-button-container {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+}
+
+.level-select-button {
+  margin-bottom: 1.5em;
+}
+
+.level-page-button:first-of-type {
+  margin-right: 0.5em;
+}
+
+#start button {
+  color: gray;
+  font-size: 24px;
+}
+
+#start-button-container > button {
+  margin-bottom: 0.6em;
+}
+
+#start button:hover {
+  color: white;
+  cursor: default;
 }

@@ -1,5 +1,6 @@
 //const Game = require("./game.js");
 const Level = require("./level.js");
+const StartScreen = require("./start/screen");
 const GAME_LEVELS = require("./levels");
 
 const CONSTANTS = {
@@ -11,18 +12,25 @@ const CONSTANTS = {
 class Game {
   constructor(ctx) {
     this.ctx = ctx;
-    this.currentLevel = new Level(GAME_LEVELS[0]);
     this.started = false;
     this.over = false;
     this.paused = false;
+    this.currentLevel = new Level(GAME_LEVELS[0]); // default but changes;
     this.render = this.render.bind(this);
     this.step = this.step.bind(this);
     this.handleClick = this.handleClick.bind(this);
+    this.selectLevel = this.selectLevel.bind(this);
+
+    this.startScreen = new StartScreen(this.selectLevel);
+  }
+
+  selectLevel(level) {
+    this.currentLevel = new Level(level);
   }
 
   start() {
     this.bindKeyHandlers();
-    this.render();
+    // this.render();
   }
 
   step() {
@@ -47,12 +55,12 @@ class Game {
   handleClick(e) {
     // This function was made when considering a Canvas based game-start UI.
     // But a DOM UI will work just fine (since this app is mostly for use on a browser!)
-    const canvas = document.getElementById("canvas");
-    const mouseX = e.pageX - canvas.offsetLeft;
-    const mouseY = e.pageY - canvas.offsetTop;
-    if (mouseX >= 0 && mouseX <= CONSTANTS.WIDTH && mouseY >= 0 && mouseY <= CONSTANTS.HEIGHT) {
-      console.log(mouseX, mouseY); 
-    }
+    // const canvas = document.getElementById("canvas");
+    // const mouseX = e.pageX - canvas.offsetLeft;
+    // const mouseY = e.pageY - canvas.offsetTop;
+    // if (mouseX >= 0 && mouseX <= CONSTANTS.WIDTH && mouseY >= 0 && mouseY <= CONSTANTS.HEIGHT) {
+    //   console.log(mouseX, mouseY); 
+    // }
   }
 
   bindKeyHandlers() {
