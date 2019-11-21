@@ -3,6 +3,9 @@ const GAME_LEVELS = require("../levels");
 // fontawesome mute "fas fa-volume-mute"
 // fontawesome sound "fas fa-volume-down"
 
+// Note: this is super hard to do without React
+// I have gained a new appreciation for React/other similar libraries.
+
 class Screen {
   constructor(selectLevel) {
     this.startButtons = document.getElementById("start-button-container");
