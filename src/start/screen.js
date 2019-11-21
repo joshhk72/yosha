@@ -10,52 +10,84 @@ class Screen {
   constructor(selectLevel) {
     this.startButtons = document.getElementById("start-button-container");
     this.startLogo = document.getElementById("start-logo");
-    this.levelSelectButtons = document.getElementById("level-select-button-container");
+    this.levelSelectButtonsScreen = document.getElementById("level-select-button-container");
     this.startScreen = document.getElementById("start");
+
+    this.aboutScreen = document.getElementById('about-container');
+    this.howPlayScreen = document.getElementById('how-play-container');
 
     this.levels = GAME_LEVELS;
     this.selectLevel = selectLevel;
 
+    this.exitHowPlayScreen = this.exitHowPlayScreen.bind(this);
+    this.exitAboutScreen = this.exitAboutScreen.bind(this);
     this.enterLevelSelect = this.enterLevelSelect.bind(this);
     this.populateLevelSelect = this.populateLevelSelect.bind(this);
     this.attachStartButtons();
-    this.attachPermanentButtons();
   }
 
   attachStartButtons() {
     const levelSelectButton = document.getElementById("level-select");
-    const howPlay = document.getElementById("how-play");
+    const howPlayButton = document.getElementById("how-play-select");
+    const aboutButton = document.getElementById("about-select");
 
-    levelSelectButton.addEventListener("click", () => {
-      this.enterLevelSelect();
-    });
+    levelSelectButton.onclick = () => this.enterLevelSelect();
+    howPlayButton.onclick = () => this.enterHowPlayScreen();
+    aboutButton.onclick = () => this.enterAboutScreen();
+    this.aboutScreen.firstElementChild.onclick = () => this.exitAboutScreen();
+    this.howPlayScreen.firstElementChild.onclick = () => this.exitHowPlayScreen();
   }
 
-  attachPermanentButtons() {
-    const mute = document.getElementById("mute");
-    const pause = document.getElementById("pause");
+  enterAboutScreen() {
+    this.startButtons.style.display = "none";
+    this.startLogo.style.display = "none";
+    this.aboutScreen.style.display = "flex";
+  }
+
+  exitAboutScreen() {
+    this.startButtons.style.display = "flex";
+    this.startLogo.style.display = "block";
+    this.aboutScreen.style.display = "none";
+  }
+
+  enterHowPlayScreen() {
+    this.startButtons.style.display = "none";
+    this.startLogo.style.display = "none"
+    this.howPlayScreen.style.display = "flex";
+  }
+
+  exitHowPlayScreen() {
+    this.startButtons.style.display = "flex";
+    this.startLogo.style.display = "block";
+    this.howPlayScreen.style.display = "none";
   }
 
   enterLevelSelect() {
     this.startButtons.style.display = "none";
     this.startLogo.style.display = "none"
-    this.levelSelectButtons.style.display = "flex";
+    this.levelSelectButtonsScreen.style.display = "flex";
     this.populateLevelSelect(1);
+  }
+
+  exitLevelSelect() {
+    this.startButtons.style.display = "flex";
+    this.startLogo.style.display = "block";
+    this.levelSelectButtonsScreen.style.display = "none";
   }
 
   populateLevelSelect(page) {
     const firstIdx = 0 + (page - 1) * 3;
     const lastIdx = firstIdx + 3;
     const levels = this.levels.slice(firstIdx, lastIdx);
-    while (this.levelSelectButtons.firstChild) {
-      this.levelSelectButtons.removeChild(this.levelSelectButtons.firstChild);
+    while (this.levelSelectButtonsScreen.firstChild) {
+      this.levelSelectButtonsScreen.removeChild(this.levelSelectButtonsScreen.firstChild);
     }
 
     const back = document.createElement("BUTTON");
     back.innerHTML = "Back to Main";
     back.classList.add("back-to-main");
     back.onclick = () => this.exitLevelSelect();
-    this.levelSelectButtons.appendChild(back);
+    this.levelSelectButtonsScreen.appendChild(back);
 
     levels.forEach((level, i) => {
       const button = document.createElement("BUTTON");
@@ -65,7 +97,7 @@ class Screen {
         this.selectLevel(level);
       };
       button.classList.add("level-select-button");
-      this.levelSelectButtons.appendChild(button);
+      this.levelSelectButtonsScreen.appendChild(button);
     });
 
     // then if there are more on the next page, or previous page...
@@ -86,14 +118,8 @@ class Screen {
         selectButton.onclick = () => this.populateLevelSelect(page + 1);
         div.appendChild(selectButton);
       }
-      this.levelSelectButtons.appendChild(div);
+      this.levelSelectButtonsScreen.appendChild(div);
     }
-  }
-
-  exitLevelSelect() {
-    this.startButtons.style.display = "flex";
-    this.startLogo.style.display = "block";
-    this.levelSelectButtons.style.display = "none";
   }
 }
 
