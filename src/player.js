@@ -106,6 +106,8 @@ class Player {
   constructor(pos) {
     this.pos = pos.minus(new Vector(0, 0.333)); // offset needed because character is taller than single tile
     this.vel = CONSTANTS.STARTING_VEL;
+
+    // images here
     this.frontSprites = new Image();
     this.backSprites = new Image();
     this.frontHitSprites = new Image();
@@ -114,8 +116,15 @@ class Player {
     this.backSprites.src = '../assets/sprites/back-yoshi.png';
     this.frontHitSprites.src = '../assets/sprites/front-hit-yoshi.png';
     this.backHitSprites.src = '../assets/sprites/back-hit-yoshi.png';
+
+    //sounds here
+    this.jumpSound = new Audio('../assets/audio/jump.wav');
+    this.shootSound = new Audio('../assets/audio/shoot.wav');
+    this.jumpSound.volume = 0.3;
+    this.shootSound.volume = 0.3;
     
-    this.facingFront = true; // facing front at the start
+    // facing front at the start
+    this.facingFront = true;
     this.movingTo = 0;
     this.wasMoving = 0;
     this.verticalPerspective = 0;
@@ -183,6 +192,7 @@ class Player {
     if (!this.isHit && !this.jumping && this.onGround) {
       this.vel.y = -CONSTANTS.JUMP_SPEED;
       this.jumping = true;
+      if (!this.muted) this.jumpSound.play();
     }
   }
 
@@ -224,6 +234,7 @@ class Player {
         newEgg = new Egg(this.pos, new Vector(-0.7 + this.vel.x / 2, -1));
       }
       state.actors.push(newEgg);
+      if (!this.muted) this.shootSound.play();
     }
   }
 
@@ -236,6 +247,7 @@ class Player {
       // shooting straight up
       const newEgg = new Egg(this.pos, new Vector(0, -1.8));
       state.actors.push(newEgg);
+      if (!this.muted) this.shootSound.play();
     }
   }
 
