@@ -9,6 +9,7 @@ const State = require('./level_state');
 // enemies here
 const FatBird = require('./enemies/fat_bird');
 const Bat = require('./enemies/bat');
+const Slime = require('./enemies/slime');
 
 const CONSTANTS = {
   DIM_X: 950,
@@ -27,6 +28,7 @@ const levelChars = {
   "F": FatBird,
   "<": Bat,
   ">": Bat,
+  "S": Slime,
 };
 
 class Level {

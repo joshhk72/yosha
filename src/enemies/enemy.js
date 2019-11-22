@@ -9,10 +9,12 @@ class Enemy {
   constructor(pos, char) {
     this.pos = pos;
     this.char = char;
+    this.vel = new Vector(0, 0); // until in viewport, no speed!
     this.isHit = false; // for small invincibility frame upon being hit (as well as animation)
     this.life = 1; // default, but enemies can have different amounts of lives
     this.reloading = false;
     this.reloadTime = 3000; // adjust if enemy should shoot faster/slower
+    this.bulletVel = CONSTANTS.BULLET_VEL;
     this.frameCount = 0;
     this.tickCount = 0;
     this.muted = false;
@@ -20,6 +22,7 @@ class Enemy {
     this.hitSound.volume = 0.5;
     // maxFrames and ticksPerFrame may differ per enemy!
 
+    this.isMoving = false;
     this.reload = this.reload.bind(this);
   }
   
@@ -31,10 +34,9 @@ class Enemy {
     const moreX = extraWidth || 0;
     const moreY = extraHeight || 0;
 
-    if (this.startedMoving && !this.reloading) {
+    if (this.isMoving && !this.reloading && !this.isHit) {
       const direction = state.player.pos.minus(this.pos);
-      const bulletVel = CONSTANTS.BULLET_VEL;
-      const bullet = new Bullet(new Vector(this.pos.x + moreX, this.pos.y + moreY), direction.scale(bulletVel));
+      const bullet = new Bullet(new Vector(this.pos.x + moreX, this.pos.y + moreY), direction.scale(this.bulletVel));
       state.actors.push(bullet);
       this.reloading = true;
       setTimeout(() => {
@@ -67,7 +69,7 @@ class Enemy {
     this.tickCount = 0;
     this.frameCount = 0;
     this.isHit = true;
-    this.startedMoving = false; // this is usually set to true when the enemy comes within the viewport
+    this.isMoving = false; // this is usually set to true when the enemy comes within the viewport
     if (!this.muted) {
       this.hitSound.currentTime = 0.2;
       this.hitSound.play();

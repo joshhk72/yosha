@@ -2,57 +2,57 @@ const Vector = require('../vector');
 const Enemy = require('./enemy');
 
 const SPRITE_SIZE = {
-  walk1: [46, 25],
-  walk2: [46, 25],
-  walk3: [44, 23],
-  walk4: [22, 23],
-  walk5: [22, 23],
-  walk6: [24, 24],
-  walk7: [44, 23],
-  walk8: [],
-  walk9: [],
-  walk10: [],
-  hit1: [31, 21],
-  hit2: [31, 21],
-  hit3: [29, 23],
-  hit4: [27, 25],
-  hit5: [27, 27],
+  walk1: [38, 26],
+  walk2: [40, 25],
+  walk3: [42, 23],
+  walk4: [42, 23],
+  walk5: [40, 24],
+  walk6: [38, 26],
+  walk7: [36, 28],
+  walk8: [34, 30],
+  walk9: [34, 30],
+  walk10: [36, 28],
+  hit1: [44, 19],
+  hit2: [44, 19],
+  hit3: [42, 22],
+  hit4: [40, 24],
+  hit5: [38, 26],
 };
 
 const BACK_SPRITE_POS = {
-  walk1: [46, 25],
-  walk2: [46, 25],
-  walk3: [44, 23],
-  walk4: [22, 23],
-  walk5: [22, 23],
-  walk6: [24, 24],
-  walk7: [44, 23],
-  walk8: [],
-  walk9: [],
-  walk10: [],
-  hit1: [31, 21],
-  hit2: [31, 21],
-  hit3: [29, 23],
-  hit4: [27, 25],
-  hit5: [27, 27],
+  walk1: [3, 4],
+  walk2: [46, 5],
+  walk3: [89, 7],
+  walk4: [133, 7],
+  walk5: [178, 6],
+  walk6: [223, 4],
+  walk7: [268, 2],
+  walk8: [313, 0],
+  walk9: [357, 0],
+  walk10: [400, 2],
+  hit1: [0, 11],
+  hit2: [44, 11],
+  hit3: [89, 8],
+  hit4: [134, 6],
+  hit5: [179, 4],
 };
 
 const FRONT_SPRITE_POS = {
-  walk1: [46, 25],
-  walk2: [46, 25],
-  walk3: [44, 23],
-  walk4: [22, 23],
-  walk5: [22, 23],
-  walk6: [24, 24],
-  walk7: [44, 23],
-  walk8: [],
-  walk9: [],
-  walk10: [],
-  hit1: [31, 21],
-  hit2: [31, 21],
-  hit3: [29, 23],
-  hit4: [27, 25],
-  hit5: [27, 27],
+  walk1: [399, 4],
+  walk2: [354, 5],
+  walk3: [309, 7],
+  walk4: [265, 7],
+  walk5: [222, 6],
+  walk6: [179, 4],
+  walk7: [136, 2],
+  walk8: [93, 0],
+  walk9: [49, 0],
+  walk10: [4, 2],
+  hit1: [176, 11],
+  hit2: [132, 11],
+  hit3: [89, 8],
+  hit4: [46, 6],
+  hit5: [3, 4],
 };
 
 const CONSTANTS = {
@@ -60,20 +60,89 @@ const CONSTANTS = {
   MAX_FRAME_COUNT: 9,
   TICKS_PER_FRAME: 4,
   RELOAD_TIME: 250, // in milliseconds
-  X_SPEED: 0.5,
+  X_SPEED: 0.3,
+  GRAVITY: 0.29,
+  FRAMES_BEFORE_TURNING: 20
 };
 
 class Slime extends Enemy {
   constructor(pos, char) {
     super(pos, char);
+    this.pos = pos.plus(new Vector(0, 0.375));
     this.frontWalkSprites = new Image();
     this.backWalkSprites = new Image();
     this.frontHitSprites = new Image();
     this.backHitSprites = new Image();
-    this.frontFlySprites.src = './assets/sprites/pixel/enemies/Slime/front-walk.png';
-    this.backFlySprites.src = './assets/sprites/pixel/enemies/Slime/back-walk.png';
+    this.frontWalkSprites.src = './assets/sprites/pixel/enemies/Slime/front-walk.png';
+    this.backWalkSprites.src = './assets/sprites/pixel/enemies/Slime/back-walk.png';
     this.frontHitSprites.src = './assets/sprites/pixel/enemies/Slime/front-hit.png';
     this.backHitSprites.src = './assets/sprites/pixel/enemies/Slime/back-hit.png';
+    this.vel = new Vector(-CONSTANTS.X_SPEED, 0);
+    this.life = 2;
+  }
+
+  static create(pos, char) {
+    return new Slime(pos, char);
+  }
+
+  get size() {
+    return new Vector(1, 0.625);
+  }
+
+  startMoving() {
+    if (this.isMoving) return;
+    this.isMoving = true;
+    this.vel = new Vector(-CONSTANTS.X_SPEED, 0);
+  }
+
+  step(timeStep, state) {
+    //if (!this.reloading) this.shoot(state, 0, 0.04);
+    this.handleTurn(timeStep, state);
+    this.handleFrames();
+    this.handleMovement(timeStep);
+  }
+
+  handleFrames() {
+    this.tickCount += 1;
+
+    if (this.tickCount > CONSTANTS.TICKS_PER_FRAME) {
+      this.tickCount = 0;
+      this.frameCount += 1;
+      if (this.frameCount > CONSTANTS.MAX_FRAME_COUNT) {
+        this.frameCount = 0;
+        if (this.isHit) this.finishGettingHit();
+      }
+    }
+  }
+
+  handleMovement(timeStep) {
+    if (this.isMoving) {
+      const xVel = this.vel.x;
+      const xMoveTo = this.pos.plus(new Vector(xVel * timeStep, 0));
+      this.pos = xMoveTo;
+    }
+  }
+
+  // slimes turn on edges
+  handleTurn(timeStep, state) {
+    if (!this.isMoving) return;
+
+    const xVel = this.vel.x;
+    const xMoveTo = this.pos.plus(new Vector(xVel * timeStep * CONSTANTS.FRAMES_BEFORE_TURNING, 0));
+    const willTouchGround = state.level.touches(xMoveTo.plus(new Vector(0, 1/50)), this.size, "tile");
+
+    if (state.level.touches(xMoveTo, this.size, "wall") 
+      || state.level.touches(xMoveTo, this.size, "tile")
+      || !willTouchGround) {
+      this.vel.x = -this.vel.x;
+      this.tickCount = 0;
+      this.frameCount = 0;
+    }
+  }
+
+  startMoving() {
+    if (this.isMoving) return;
+    this.isMoving = true;
   }
 
   draw(ctx, viewPortCenter) {
@@ -173,6 +242,21 @@ class Slime extends Enemy {
       }
     }
 
+  }
+
+  selectSprite(ctx, coordinates, size, spritesImg) {
+    const width = CONSTANTS.TILE_SIZE * this.size.x * size[0] / 40;
+    const height = CONSTANTS.TILE_SIZE * this.size.y * size[1] / 25;
+
+    const extraHeight = 3;
+    const xOnScreen = 950 / 2 + 50 * (this.pos.x - this.viewPortCenter.x);
+    const yOnScreen = 450 / 2 + 50 * (this.pos.y - this.viewPortCenter.y) + (25-size[1] + 5);
+
+    ctx.drawImage(spritesImg,
+      coordinates[0], coordinates[1],
+      size[0], size[1],
+      xOnScreen, yOnScreen,
+      width, height);
   }
 };
 

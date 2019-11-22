@@ -71,11 +71,6 @@ class Bat extends Enemy {
     this.reloadTime = 2200; // custom reload time for bats
 
     this.life = 1; // fragile dudes
-    this.vel = new Vector(0, 0); // until in viewport, no speed!
-    this.startedMoving = false; // doesn't move until in viewport!
-
-    this.maxFrameCount = CONSTANTS.MAX_FRAME_COUNT;
-    this.ticksPerFrame = CONSTANTS.TICKS_PER_FRAME;
   }
 
   static create(pos, char) {
@@ -97,10 +92,10 @@ class Bat extends Enemy {
   handleFrames() {
     this.tickCount += 1;
 
-    if (this.tickCount > this.ticksPerFrame) {
+    if (this.tickCount > CONSTANTS.TICKS_PER_FRAME) {
       this.tickCount = 0;
       this.frameCount += 1;
-      if (this.frameCount > this.maxFrameCount) {
+      if (this.frameCount > CONSTANTS.MAX_FRAME_COUNT) {
         this.frameCount = 0;
         if (this.isHit) this.finishGettingHit();
       }
@@ -114,18 +109,18 @@ class Bat extends Enemy {
   }
 
   handleTurn(state) {
-    if (!this.startedMoving) return;
+    if (!this.isMoving) return;
     if ((state.player.pos.x - this.pos.x > 7 && this.vel.x < 0) 
       || (state.player.pos.x - this.pos.x < -7 && this.vel.x > 0)) {
-      this.vel = new Vector(-this.vel.x, 0);
+      this.vel.x = -this.vel.x
       this.tickCount = 0;
       this.frameCount = 0;
     }
   }
 
   startMoving() {
-    if (this.startedMoving) return;
-    this.startedMoving = true;
+    if (this.isMoving) return;
+    this.isMoving = true;
     if (this.char === "<") {
       this.vel = new Vector(-CONSTANTS.X_SPEED, 0);
     } else if (this.char === ">") {

@@ -50,6 +50,7 @@ class FatBird extends Enemy {
     this.hitSprites = new Image();
     this.idleSprites.src = './assets/sprites/pixel/enemies/FatBird/idle.png';
     this.hitSprites.src = './assets/sprites/pixel/enemies/FatBird/hit.png';
+    this.reloadTime = 6000;
 
     this.life = 2;
 
@@ -66,6 +67,11 @@ class FatBird extends Enemy {
     return new Vector(1, 1);
   }
 
+  startMoving() {
+    if (this.isMoving) return;
+    this.isMoving = true;
+  }
+
   handleFrames() {
     this.tickCount += 1;
 
@@ -80,7 +86,8 @@ class FatBird extends Enemy {
   }
 
   // The fat bird is a useless enemy, so no movement needs to be handled!
-  step() {
+  step(_, state) {
+    if (!this.reloading) this.shoot(state, 0, 0.4);
     this.handleFrames();
     // this.handleMovement();
   }
