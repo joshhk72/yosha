@@ -1,5 +1,3 @@
-
-
 class Life {
   constructor() {
     this.value = 5;

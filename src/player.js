@@ -385,9 +385,7 @@ class Player {
 
   handleFrames() {
     // Increment ticks if continuously moving
-    if (this.shooting) {
-      this.tickCount += 1;
-    } else if (this.shootingUp) {
+    if (this.shooting || this.shootingUp || this.isHit) {
       this.tickCount += 1;
     } else if (this.movingTo !== 0) {
       if (this.wasMoving === this.movingTo) {
@@ -414,10 +412,10 @@ class Player {
         }, CONSTANTS.RELOAD_TIME);
       }
     }
-
+    
     // If the player isn't standing still, then update 'front' status
     if (this.movingTo !== 0) this.facingFront = this.movingTo > 0;
-
+    
     // Update this for checks done during the next step
     this.wasMoving = this.movingTo;
   }

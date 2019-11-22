@@ -12,7 +12,8 @@ class Enemy {
     this.vel = new Vector(0, 0); // until in viewport, no speed!
     this.isHit = false; // for small invincibility frame upon being hit (as well as animation)
     this.life = 1; // default, but enemies can have different amounts of lives
-    this.reloading = false;
+    this.reloading = true;
+    setTimeout(() => this.reloading = false, 2000);
     this.reloadTime = 3000; // adjust if enemy should shoot faster/slower
     this.bulletVel = CONSTANTS.BULLET_VEL;
     this.frameCount = 0;

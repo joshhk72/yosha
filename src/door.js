@@ -68,7 +68,7 @@ class Door {
     this.levelComplete = true;
   }
 
-  // door don't move, so step only handles the frames
+  // doors don't move, so step only handles the frames
   step() {
     if (!this.levelComplete) return;
     this.tickCount += 1;
