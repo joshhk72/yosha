@@ -12,6 +12,7 @@ class Screen {
 
     this.aboutScreen = document.getElementById('about-container');
     this.howPlayScreen = document.getElementById('how-play-container');
+    this.creditScreen = document.getElementById('credit-container');
 
     this.levels = GAME_LEVELS;
     this.musicList = MUSIC_LIST;
@@ -19,6 +20,8 @@ class Screen {
 
     this.exitHowPlayScreen = this.exitHowPlayScreen.bind(this);
     this.exitAboutScreen = this.exitAboutScreen.bind(this);
+    this.exitCreditScreen = this.exitCreditScreen.bind(this);
+
     this.enterLevelSelect = this.enterLevelSelect.bind(this);
     this.populateLevelSelect = this.populateLevelSelect.bind(this);
     this.attachStartButtons();
@@ -46,12 +49,27 @@ class Screen {
     const levelSelectButton = document.getElementById("level-select");
     const howPlayButton = document.getElementById("how-play-select");
     const aboutButton = document.getElementById("about-select");
+    const creditButton = document.getElementById("credit-select");
 
     levelSelectButton.onclick = () => this.enterLevelSelect();
     howPlayButton.onclick = () => this.enterHowPlayScreen();
     aboutButton.onclick = () => this.enterAboutScreen();
+    creditButton.onclick = () => this.enterCreditScreen();
     this.aboutScreen.firstElementChild.onclick = () => this.exitAboutScreen();
     this.howPlayScreen.firstElementChild.onclick = () => this.exitHowPlayScreen();
+    this.creditScreen.firstElementChild.onclick = () => this.exitCreditScreen();
+  }
+
+  enterCreditScreen() {
+    this.startButtons.style.display = "none";
+    this.startLogo.style.display = "none";
+    this.creditScreen.style.display = "flex";
+  }
+
+  exitCreditScreen() {
+    this.startButtons.style.display = "flex";
+    this.startLogo.style.display = "block";
+    this.creditScreen.style.display = "none";
   }
 
   enterAboutScreen() {

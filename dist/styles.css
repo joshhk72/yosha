@@ -65,7 +65,7 @@ canvas {
   width: 330px;
   height: 130px;
   margin: 0 auto;
-  margin-top: 7em;
+  margin-top: 5em;
   -webkit-user-select: none;
   -khtml-user-select: none;
   -moz-user-select: none;
@@ -148,28 +148,46 @@ canvas {
   height: 100%;
   width: 100%;
   color: white;
+  padding: 2em 0;
+  box-sizing: border-box;
 }
 
 #about-container h1 {
   font-size: 24px;
 }
 
-#about-container h2 {
-  font-size: 24px;
-  margin-top: 0.5em;
-}
-
-#about-description {
-  font-size: 14px;
-}
-
 #about-container p {
-  margin: 0 auto;
-  margin-top: 1em;
-  width: 45%;
+  margin-top: 0.8em;
+  font-size: 19px;
+  width: 50%;
   text-align: center;
-  font-size: 13px;
 }
+
+#credit-container {
+  display: none;
+  position: relative;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  color: white;
+  padding: 2em 0;
+  box-sizing: border-box;
+}
+
+#credit-container h1 {
+  font-size: 32px;
+}
+
+#credit-container p {
+  margin: 0 auto;
+  text-align: center;
+  margin-top: 1em;
+  width: 50%;
+}
+
+
 
 /* These are victory / defeat screens */
 

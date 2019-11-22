@@ -1,4 +1,5 @@
 const Vector = require('../vector');
+const Enemy = require('./enemy');
 
 // This is a useless enemy that does not move, be careful not to walk into it though!
 
@@ -41,8 +42,6 @@ const SPRITE_SIZE = {
   hit4: [35, 37],
   hit5: [35, 39],
 };
-
-const Enemy = require('./enemy');
 
 class FatBird extends Enemy {
   constructor(pos) {
