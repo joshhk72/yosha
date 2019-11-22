@@ -29,6 +29,7 @@ const levelChars = {
 class Level {
   constructor(plan, music) {
     this.won = false;
+    this.lost = false;
     this.background = new Image();
     this.background.src = '../assets/sprites/background.png';
     this.music = music;
@@ -76,12 +77,17 @@ class Level {
     // Bound functions
     this.inViewPort = this.inViewPort.bind(this);
     this.win = this.win.bind(this);
+    this.lose = this.lose.bind(this);
     this.state = State.start(this);
     this.music.play();
   }
 
   win() {
     this.won = true;
+  }
+
+  lose() {
+    this.lost = true;
   }
 
   mute() {
@@ -157,6 +163,10 @@ class Level {
       }
     })
 
+    // update life
+    this.state.life.step();
+    if (this.state.life.value === 0) this.lose();
+
     // check if enemies are left
     if (!this.state.enemiesExist) this.state.door.open();
   }
@@ -178,7 +188,10 @@ class Level {
       if (this.inViewPort(actor) && actor.type !== "door") {
         actor.draw(ctx, this.viewPortCenter);
       };
-    })
+    });
+
+    // life is over everything else, so it draws last.
+    this.state.life.draw(ctx);
   }
 
   scrollPlayerIntoView() {

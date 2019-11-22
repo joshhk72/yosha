@@ -18,7 +18,9 @@ class Game {
     this.paused = false;
     this.muted = false;
     this.victoryMusic = new Audio('../assets/audio/victory.wav');
-    this.victoryMusic.volume = 0.3;
+    this.victoryMusic.volume = 0.2;
+    this.defeatMusic = new Audio('../assets/audio/gameover.wav');
+    this.defeatMusic.volume = 0.2;
     this.currentLevel = undefined; // default but changes;
     this.render = this.render.bind(this);
     this.step = this.step.bind(this);
@@ -80,14 +82,20 @@ class Game {
   celebrateWin() {
     this.playing = false;
     this.currentLevel.mute();
-    this.victoryMusic.currentTime = 0;
-    this.victoryMusic.play();
+    if (!this.muted) {
+      this.victoryMusic.currentTime = 0;
+      this.victoryMusic.play();
+    }
     console.log("You win!");
   }
 
   mournLoss() {
     this.playing = false;
     this.currentLevel.mute();
+    if (!this.muted) {
+      this.defeatMusic.currentTime = 0;
+      this.defeatMusic.play();
+    }
     console.log("You lose :(");
   }
 
@@ -108,6 +116,10 @@ class Game {
     if (this.currentLevel.won) { 
       this.won = true;
       this.celebrateWin();
+    };
+    if (this.currentLevel.lost) {
+      this.lost = true;
+      this.mournLoss();
     };
     this.currentLevel.step(CONSTANTS.TIME);
     this.currentLevel.draw(this.ctx);

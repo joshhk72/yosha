@@ -134,7 +134,6 @@ class Player {
     this.reloading = false; // this is for 'throttling' shooting of eggs
     this.shooting = false;
     this.shootingUp = false; // these two are differentiated so that animations can be differentiated
-    
     this.muted = false;
     // http://www.williammalone.com/articles/create-html5-canvas-javascript-sprite-animation/
     this.frameCount = 0;
@@ -169,7 +168,7 @@ class Player {
 
   checkDoor(state) {
     if (state.door.levelComplete && state.level.overlap(state.player, state.door)) {
-      state.level.won = true;
+      state.level.win();
     }
   }
 
@@ -208,6 +207,7 @@ class Player {
     this.frameCount = 0;
     this.isHit = true;
     this.vel = vel;
+    state.life.lose();
     setTimeout(() => {
       // Movement must continue after use is hit (bit of a hacky fix, but...)
       if ((!key.isPressed('left') && !key.isPressed('right')) || (key.isPressed('left') && key.isPressed('right'))) {
@@ -218,7 +218,6 @@ class Player {
         this.vel = new Vector(CONSTANTS.X_SPEED, this.vel.y);
       }
       // this.vel = new Vector(0, this.vel.y);
-      state.life -= 1;
       this.isHit = false;
       
     }, 600); // can either do it here or elsewhere;

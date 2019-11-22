@@ -1,10 +1,11 @@
+const Life = require('./life');
+
 class State {
   constructor(level, actors, status) {
     this.level = level;
     this.actors = actors;
     this.status = status;
-    this.life = 5; // life is health, hp, etc.
-
+    this.life = new Life();
     this.win = false;
     this.lose = false;
     
