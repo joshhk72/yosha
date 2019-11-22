@@ -35,7 +35,7 @@ class Level {
     this.music = music;
     this.music.loop = true;
     this.music.currentTime = 0;
-    this.music.volume = 0.3;
+    this.music.volume = 0.2;
     this.muted = false;
     this.status = "playing";
     this.actors = [];

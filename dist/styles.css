@@ -101,9 +101,42 @@ canvas {
   position: relative;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   height: 100%;
   width: 100%;
+  color: white;
+}
+
+#how-play-container h1 {
+  font-size: 32px;
+  margin-top: 1.8em;
+  margin-bottom: 0.2em;
+}
+
+#how-play-container p {
+  width: 38%;
+  margin: 0 auto;
+  font-size: 20px;
+  margin-top: 0.6em;
+  text-align: center;
+}
+
+#how-play-container ul {
+  width: 38%;
+  margin: 0 auto;
+  font-size: 20px;
+  text-align: center;
+}
+
+#how-play-container li {
+  margin-top: 0.4em;
+  font-size: 17px;
+}
+
+#how-play-container span {
+  text-align: center;
+  margin-top: 0.6em;
+  width: 38%;
+  font-size: 17px;
 }
 
 #about-container {
@@ -115,6 +148,27 @@ canvas {
   height: 100%;
   width: 100%;
   color: white;
+}
+
+#about-container h1 {
+  font-size: 24px;
+}
+
+#about-container h2 {
+  font-size: 24px;
+  margin-top: 0.5em;
+}
+
+#about-description {
+  font-size: 14px;
+}
+
+#about-container p {
+  margin: 0 auto;
+  margin-top: 1em;
+  width: 45%;
+  text-align: center;
+  font-size: 13px;
 }
 
 /* These are victory / defeat screens */
