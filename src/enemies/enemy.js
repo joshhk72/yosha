@@ -26,7 +26,7 @@ class Enemy {
   }
 
   shoot(state) {
-    if (!this.reloading) {
+    if (this.startedMoving && !this.reloading) {
       const direction = state.player.pos.minus(this.pos);
       const bulletVel = CONSTANTS.BULLET_VEL;
       const bullet = new Bullet(this.pos, direction.scale(bulletVel));
