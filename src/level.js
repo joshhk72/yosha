@@ -8,6 +8,7 @@ const State = require('./level_state');
 
 // enemies here
 const FatBird = require('./enemies/fat_bird');
+const Bat = require('./enemies/bat');
 
 const CONSTANTS = {
   DIM_X: 950,
@@ -24,6 +25,8 @@ const levelChars = {
   "D": Door,
   ".": "empty",
   "F": FatBird,
+  "<": Bat,
+  ">": Bat,
 };
 
 class Level {
@@ -186,6 +189,7 @@ class Level {
 
     this.state.actors.forEach(actor => {
       if (this.inViewPort(actor) && actor.type !== "door") {
+        if (actor.type === "enemy") actor.startMoving(); // start moving when coming in viewport!
         actor.draw(ctx, this.viewPortCenter);
       };
     });

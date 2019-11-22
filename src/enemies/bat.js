@@ -2,8 +2,8 @@ const Vector = require('../vector');
 const Enemy = require('./enemy');
 
 const SPRITE_SIZE = {
-  fly1: ['idk'],
-  fly2: ['idk'],
+  fly1: [46, 25], // this is a guess
+  fly2: [46, 25], // this is a guess
   fly3: [44, 23],
   fly4: [22, 23],
   fly5: [22, 23],
@@ -17,8 +17,8 @@ const SPRITE_SIZE = {
 };
 
 const BACK_SPRITE_POS = {
-  fly1: ['idk'],
-  fly2: ['idk'],
+  fly1: [0, 3], // this is a guess
+  fly2: [46, 3], // this is a guess
   fly3: [93, 4],
   fly4: [150, 3],
   fly5: [196, 2],
@@ -32,8 +32,8 @@ const BACK_SPRITE_POS = {
 };
 
 const FRONT_SPRITE_POS = {
-  fly1: ['idk'],
-  fly2: ['idk'],
+  fly1: [276, 3],
+  fly2: [230, 3],
   fly3: [185, 4],
   fly4: [150, 3],
   fly5: [104, 2],
@@ -48,9 +48,10 @@ const FRONT_SPRITE_POS = {
 
 const CONSTANTS = {
   TILE_SIZE: 50,
-  MAX_FRAME_COUNT: 9,
-  TICKS_PER_FRAME: 4,
+  MAX_FRAME_COUNT: 6,
+  TICKS_PER_FRAME: 3,
   RELOAD_TIME: 250, // in milliseconds
+  X_SPEED: 0.5,
 };
 
 class Bat extends Enemy {
@@ -61,8 +62,16 @@ class Bat extends Enemy {
     this.backFlySprites = new Image();
     this.frontHitSprites = new Image();
     this.backHitSprites = new Image();
+    this.frontFlySprites.src = './assets/sprites/pixel/enemies/Bat/front-fly.png';
+    this.backFlySprites.src = './assets/sprites/pixel/enemies/Bat/back-fly.png';
+    this.frontHitSprites.src = './assets/sprites/pixel/enemies/Bat/front-hit.png';
+    this.backHitSprites.src = './assets/sprites/pixel/enemies/Bat/back-hit.png';
+
+    this.char = char;
 
     this.life = 1; // fragile dudes
+    this.vel = new Vector(0, 0); // until in viewport, no speed!
+    this.startedMoving = false; // doesn't move until in viewport!
 
     this.maxFrameCount = CONSTANTS.MAX_FRAME_COUNT;
     this.ticksPerFrame = CONSTANTS.TICKS_PER_FRAME;
@@ -73,23 +82,134 @@ class Bat extends Enemy {
   }
 
   get size() {
-    // fat bird is one tile size!
-    return new Vector(1, 1);
+    // bats are smaller targets!
+    return new Vector(0.75, 0.75);
+  }
+
+  step(timeStep, state) {
+    this.handleTurn(state);
+    this.handleFrames();
+    this.handleMovement(timeStep);
+  }
+
+  handleFrames() {
+    this.tickCount += 1;
+
+    if (this.tickCount > this.ticksPerFrame) {
+      this.tickCount = 0;
+      this.frameCount += 1;
+      if (this.frameCount > this.maxFrameCount) {
+        this.frameCount = 0;
+        if (this.isHit) this.finishGettingHit();
+      }
+    }
+  }
+
+  handleMovement(timeStep) {
+    const xVel = this.vel.x;
+    const xMoveTo = this.pos.plus(new Vector(xVel * timeStep, 0));
+    this.pos = xMoveTo;
+  }
+
+  handleTurn(state) {
+    if (!this.startedMoving) return;
+    if ((state.player.pos.x - this.pos.x > 7 && this.vel.x < 0) 
+      || (state.player.pos.x - this.pos.x < -7 && this.vel.x > 0)) {
+      this.vel = new Vector(-this.vel.x, 0);
+      this.tickCount = 0;
+      this.frameCount = 0;
+    }
+  }
+
+  startMoving() {
+    if (this.startedMoving) return;
+    this.startedMoving = true;
+    if (this.char === "<") {
+      this.vel = new Vector(-CONSTANTS.X_SPEED, 0);
+    } else if (this.char === ">") {
+      this.vel = new Vector(CONSTANTS.X_SPEED, 0);
+    }
   }
 
   draw(ctx, viewPortCenter) {
+    this.viewPortCenter = viewPortCenter;
 
-  }
+    if (!this.isHit && this.vel.x > 0) {
+      switch (this.frameCount) {
+        case 0:
+          return this.selectSprite(ctx, FRONT_SPRITE_POS['fly1'], SPRITE_SIZE['fly1'], this.frontFlySprites);
+        case 1:
+          return this.selectSprite(ctx, FRONT_SPRITE_POS['fly2'], SPRITE_SIZE['fly2'], this.frontFlySprites);
+        case 2:
+          return this.selectSprite(ctx, FRONT_SPRITE_POS['fly3'], SPRITE_SIZE['fly3'], this.frontFlySprites);
+        case 3:
+          return this.selectSprite(ctx, FRONT_SPRITE_POS['fly4'], SPRITE_SIZE['fly4'], this.frontFlySprites);
+        case 4:
+          return this.selectSprite(ctx, FRONT_SPRITE_POS['fly5'], SPRITE_SIZE['fly5'], this.frontFlySprites);
+        case 5:
+          return this.selectSprite(ctx, FRONT_SPRITE_POS['fly6'], SPRITE_SIZE['fly6'], this.frontFlySprites);
+        case 6:
+          return this.selectSprite(ctx, FRONT_SPRITE_POS['fly7'], SPRITE_SIZE['fly7'], this.frontFlySprites);
+      }
+    } else if (!this.isHit && this.vel.x < 0) {
+      switch (this.frameCount) {
+        case 0:
+          return this.selectSprite(ctx, BACK_SPRITE_POS['fly1'], SPRITE_SIZE['fly1'], this.backFlySprites);
+        case 1:
+          return this.selectSprite(ctx, BACK_SPRITE_POS['fly2'], SPRITE_SIZE['fly2'], this.backFlySprites);
+        case 2:
+          return this.selectSprite(ctx, BACK_SPRITE_POS['fly3'], SPRITE_SIZE['fly3'], this.backFlySprites);
+        case 3:
+          return this.selectSprite(ctx, BACK_SPRITE_POS['fly4'], SPRITE_SIZE['fly4'], this.backFlySprites);
+        case 4:
+          return this.selectSprite(ctx, BACK_SPRITE_POS['fly5'], SPRITE_SIZE['fly5'], this.backFlySprites);
+        case 5:
+          return this.selectSprite(ctx, BACK_SPRITE_POS['fly6'], SPRITE_SIZE['fly6'], this.backFlySprites);
+        case 6:
+          return this.selectSprite(ctx, BACK_SPRITE_POS['fly7'], SPRITE_SIZE['fly7'], this.backFlySprites);
+      }
+    } else if (this.isHit && this.vel.x < 0) {
+      switch (this.frameCount) {
+        case 0:
+          return this.selectSprite(ctx, BACK_SPRITE_POS['hit2'], SPRITE_SIZE['hit2'], this.backHitSprites);
+        case 1:
+          return this.selectSprite(ctx, BACK_SPRITE_POS['hit3'], SPRITE_SIZE['hit3'], this.backHitSprites);
+        case 2:
+          return this.selectSprite(ctx, BACK_SPRITE_POS['hit4'], SPRITE_SIZE['hit4'], this.backHitSprites);
+        case 3:
+          return this.selectSprite(ctx, BACK_SPRITE_POS['hit5'], SPRITE_SIZE['hit5'], this.backHitSprites);
+        case 4:
+          return this.selectSprite(ctx, BACK_SPRITE_POS['hit1'], SPRITE_SIZE['hit1'], this.backHitSprites);
+        case 5:
+          return this.selectSprite(ctx, BACK_SPRITE_POS['hit2'], SPRITE_SIZE['hit2'], this.backHitSprites);
+        case 6:
+          return this.selectSprite(ctx, BACK_SPRITE_POS['hit3'], SPRITE_SIZE['hit3'], this.backHitSprites);
+      }
+    } else if (this.isHit && this.vel.x > 0) {
+      switch (this.frameCount) {
+        case 0:
+          return this.selectSprite(ctx, FRONT_SPRITE_POS['hit2'], SPRITE_SIZE['hit2'], this.frontHitSprites);
+        case 1:
+          return this.selectSprite(ctx, FRONT_SPRITE_POS['hit3'], SPRITE_SIZE['hit3'], this.frontHitSprites);
+        case 2:
+          return this.selectSprite(ctx, FRONT_SPRITE_POS['hit4'], SPRITE_SIZE['hit4'], this.frontHitSprites);
+        case 3:
+          return this.selectSprite(ctx, FRONT_SPRITE_POS['hit5'], SPRITE_SIZE['hit5'], this.frontHitSprites);
+        case 4:
+          return this.selectSprite(ctx, FRONT_SPRITE_POS['hit1'], SPRITE_SIZE['hit1'], this.frontHitSprites);
+        case 5:
+          return this.selectSprite(ctx, FRONT_SPRITE_POS['hit2'], SPRITE_SIZE['hit2'], this.frontHitSprites);
+        case 6:
+          return this.selectSprite(ctx, FRONT_SPRITE_POS['hit3'], SPRITE_SIZE['hit3'], this.frontHitSprites);
+      }
+    }
 
-  step() {
-    this.handleFrames();
-    this.handleMovement();
   }
 
   selectSprite(ctx, coordinates, size, spritesImg) {
     // [25, 25] is taken as the default sprite size for fat bird (tis just an estimate...)
-    const width = CONSTANTS.TILE_SIZE * this.size.x * size[0] / 35;
-    const height = CONSTANTS.TILE_SIZE * this.size.y * size[1] / 35;
+    const width = CONSTANTS.TILE_SIZE * this.size.x * size[0] / 25;
+    const height = CONSTANTS.TILE_SIZE * this.size.y * size[1] / 25;
 
     // const extraHeight = -3;
 

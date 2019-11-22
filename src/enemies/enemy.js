@@ -1,7 +1,7 @@
 class Enemy {
-  constructor(pos, vel) {
+  constructor(pos, char) {
     this.pos = pos;
-    this.vel = vel;
+    this.char = char;
     this.isHit = false; // for small invincibility frame upon being hit (as well as animation)
     this.life = 1; // default, but enemies can have different amounts of lives
     this.frameCount = 0;
@@ -14,6 +14,10 @@ class Enemy {
   
   get type() {
     return "enemy";
+  }
+
+  startMoving() {
+    // this method will be used for most enemies, might as well have a default!
   }
 
   considerTurning() {
