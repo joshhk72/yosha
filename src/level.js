@@ -31,7 +31,7 @@ class Level {
     this.won = false;
     this.lost = false;
     this.background = new Image();
-    this.background.src = '../assets/sprites/background.png';
+    this.background.src = './assets/sprites/background.png';
     this.music = music;
     this.music.loop = true;
     this.music.currentTime = 0;

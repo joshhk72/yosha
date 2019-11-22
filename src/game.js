@@ -17,9 +17,9 @@ class Game {
     this.won = false;
     this.paused = false;
     this.muted = false;
-    this.victoryMusic = new Audio('../assets/audio/victory.wav');
+    this.victoryMusic = new Audio('./assets/audio/victory.wav');
     this.victoryMusic.volume = 0.2;
-    this.defeatMusic = new Audio('../assets/audio/gameover.wav');
+    this.defeatMusic = new Audio('./assets/audio/gameover.wav');
     this.defeatMusic.volume = 0.2;
     this.currentLevel = undefined; // default but changes;
     this.render = this.render.bind(this);

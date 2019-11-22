@@ -13,7 +13,7 @@ class Egg {
     this.pos = pos;
     this.vel = vel;
     this.sprites = new Image();
-    this.sprites.src = '../assets/sprites/back-yoshi.png';
+    this.sprites.src = './assets/sprites/back-yoshi.png';
   }
 
   get type() {

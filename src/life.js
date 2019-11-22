@@ -4,7 +4,7 @@ class Life {
   constructor() {
     this.value = 5;
     this.sprites = new Image();
-    this.sprites.src = '../assets/sprites/hearts/animated.png';
+    this.sprites.src = './assets/sprites/hearts/animated.png';
     this.hit = false;
 
     this.tickCount = 0;

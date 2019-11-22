@@ -7,7 +7,7 @@ class Enemy {
     this.frameCount = 0;
     this.tickCount = 0;
     this.muted = false;
-    this.hitSound = new Audio('../assets/audio/enemy-hit.wav');
+    this.hitSound = new Audio('./assets/audio/enemy-hit.wav');
     this.hitSound.volume = 0.5;
     // maxFrames and ticksPerFrame may differ per enemy!
   }

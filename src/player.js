@@ -112,15 +112,15 @@ class Player {
     this.backSprites = new Image();
     this.frontHitSprites = new Image();
     this.backHitSprites = new Image();
-    this.frontSprites.src = '../assets/sprites/yoshi.png';
-    this.backSprites.src = '../assets/sprites/back-yoshi.png';
-    this.frontHitSprites.src = '../assets/sprites/front-hit-yoshi.png';
-    this.backHitSprites.src = '../assets/sprites/back-hit-yoshi.png';
+    this.frontSprites.src = './assets/sprites/yoshi.png';
+    this.backSprites.src = './assets/sprites/back-yoshi.png';
+    this.frontHitSprites.src = './assets/sprites/front-hit-yoshi.png';
+    this.backHitSprites.src = './assets/sprites/back-hit-yoshi.png';
 
     //sounds here
-    this.jumpSound = new Audio('../assets/audio/jump.wav');
-    this.hurtSound = new Audio('../assets/audio/hurt.wav');
-    this.shootSound = new Audio('../assets/audio/shoot.wav');
+    this.jumpSound = new Audio('./assets/audio/jump.wav');
+    this.hurtSound = new Audio('./assets/audio/hurt.wav');
+    this.shootSound = new Audio('./assets/audio/shoot.wav');
     this.jumpSound.volume = 0.3;
     this.hurtSound.volume = 0.3;
     this.shootSound.volume = 0.3;

@@ -49,8 +49,8 @@ class FatBird extends Enemy {
     super(pos);
     this.idleSprites = new Image();
     this.hitSprites = new Image();
-    this.idleSprites.src = '../assets/sprites/pixel/enemies/FatBird/Idle (40x48).png';
-    this.hitSprites.src = '../assets/sprites/pixel/enemies/FatBird/Hit (40x48).png';
+    this.idleSprites.src = './assets/sprites/pixel/enemies/FatBird/Idle (40x48).png';
+    this.hitSprites.src = './assets/sprites/pixel/enemies/FatBird/Hit (40x48).png';
 
     this.life = 2;
 

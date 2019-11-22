@@ -49,7 +49,7 @@ class Door {
     this.tickCount = 0;
     this.frameCount = 0;
     this.sprites = new Image();
-    this.sprites.src = '../assets/sprites/door.png';
+    this.sprites.src = './assets/sprites/door.png';
   }
 
   static create(pos) {

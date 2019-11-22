@@ -94,9 +94,9 @@ $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 `,
 ]
 
-const song1 = new Audio('../assets/audio/A_rainy_day-JeffSpeed68.mp3');
-const song2 = new Audio('../assets/audio/Shrimp_Rich-septahelix.mp3');
-const song3 = new Audio('../assets/audio/Staying_Positive-jlbrock44.mp3');
+const song1 = new Audio('./assets/audio/A_rainy_day-JeffSpeed68.mp3');
+const song2 = new Audio('./assets/audio/Shrimp_Rich-septahelix.mp3');
+const song3 = new Audio('./assets/audio/Staying_Positive-jlbrock44.mp3');
 
 const MUSIC_LIST = [
   song1,
