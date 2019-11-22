@@ -223,7 +223,7 @@ class Player {
       // this.vel = new Vector(0, this.vel.y);
       this.isHit = false;
       
-    }, 600); // can either do it here or elsewhere;
+    }, 800); // can either do it here or elsewhere;
   }
 
   recoil(vel) {
