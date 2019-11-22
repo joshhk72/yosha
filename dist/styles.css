@@ -117,6 +117,55 @@ canvas {
   color: white;
 }
 
+/* These are victory / defeat screens */
+
+#victory-screen {
+  position: absolute;
+  display: none;
+  height: 450px;
+  width: 950px;
+  background-color: black;
+  left: 50%;
+  margin-left: -475px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  z-index: 2;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+#victory-screen h1, #defeat-screen h1 {
+  font-size: 38px;
+  margin-bottom: 0.8em;
+  background-color: transparent;
+}
+
+#victory-screen button, #defeat-screen button {
+  background-color: darkgray;
+  padding: 10px 12px;
+}
+
+#victory-screen button:hover, #defeat-screen button:hover {
+  background-color: gray;
+}
+
+#defeat-screen {
+  position: absolute;
+  display: none;
+  height: 450px;
+  width: 950px;
+  background-color: black;
+  left: 50%;
+  margin-left: -475px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  z-index: 2;
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
 .level-select-button {
   margin-bottom: 1.5em;
 }

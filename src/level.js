@@ -124,7 +124,7 @@ class Level {
 
         // check if enemy hit player
         this.state.enemies.forEach(enemy => {
-          if (!hitOnce && this.overlap(this.state.player, enemy) && !this.state.player.isHit) {
+          if (!hitOnce && this.overlap(this.state.player, enemy) && !this.state.player.isHit && !enemy.isHit) {
             const xDiff = this.state.player.pos.x - enemy.pos.x;
             const recoilVel = xDiff/Math.abs(xDiff) * 0.3;
             this.state.player.getHit(new Vector(recoilVel, 0.1), this.state);

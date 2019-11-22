@@ -4,7 +4,7 @@ const { GAME_LEVELS, MUSIC_LIST } = require("../levels");
 // I have gained a new appreciation for React/other similar libraries.
 
 class Screen {
-  constructor(selectLevel, selectMusic) {
+  constructor(selectLevel) {
     this.startButtons = document.getElementById("start-button-container");
     this.startLogo = document.getElementById("start-logo");
     this.levelSelectButtonsScreen = document.getElementById("level-select-button-container");
@@ -22,6 +22,24 @@ class Screen {
     this.enterLevelSelect = this.enterLevelSelect.bind(this);
     this.populateLevelSelect = this.populateLevelSelect.bind(this);
     this.attachStartButtons();
+    this.attachGameEndButtons();
+  }
+
+  attachGameEndButtons() {
+    // These are on the defeat & victory screens
+    const buttons = document.getElementsByClassName("back-to-start");
+    buttons.item(0).onclick = () => {
+      const screen = document.getElementById("victory-screen");
+      screen.style.display = "none";
+      this.startScreen.style.display = "block";
+      this.exitLevelSelect();
+    }
+    buttons.item(1).onclick = () => {
+      const screen = document.getElementById("defeat-screen");
+      screen.style.display = "none";
+      this.startScreen.style.display = "block";
+      this.exitLevelSelect();
+    }
   }
 
   attachStartButtons() {

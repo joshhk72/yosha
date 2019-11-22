@@ -119,8 +119,10 @@ class Player {
 
     //sounds here
     this.jumpSound = new Audio('../assets/audio/jump.wav');
+    this.hurtSound = new Audio('../assets/audio/hurt.wav');
     this.shootSound = new Audio('../assets/audio/shoot.wav');
     this.jumpSound.volume = 0.3;
+    this.hurtSound.volume = 0.3;
     this.shootSound.volume = 0.3;
     
     // facing front at the start
@@ -208,6 +210,7 @@ class Player {
     this.isHit = true;
     this.vel = vel;
     state.life.lose();
+    if (!this.muted) this.hurtSound.play();
     setTimeout(() => {
       // Movement must continue after use is hit (bit of a hacky fix, but...)
       if ((!key.isPressed('left') && !key.isPressed('right')) || (key.isPressed('left') && key.isPressed('right'))) {

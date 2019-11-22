@@ -86,6 +86,8 @@ class Game {
       this.victoryMusic.currentTime = 0;
       this.victoryMusic.play();
     }
+    const screen = document.getElementById("victory-screen");
+    screen.style.display = "flex";
     console.log("You win!");
   }
 
@@ -96,6 +98,8 @@ class Game {
       this.defeatMusic.currentTime = 0;
       this.defeatMusic.play();
     }
+    const screen = document.getElementById("defeat-screen");
+    screen.style.display = "flex";
     console.log("You lose :(");
   }
 
