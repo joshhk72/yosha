@@ -1,0 +1,21 @@
+header {
+  background-color: gray;
+  margin-bottom: 2em;
+  height: 4em;
+}
+
+#header-title {
+  height: 100%;
+  background-color: green;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+}
+
+#header-title img {
+  height: 50px;
+  width: 100px;
+  background-color: green;
+  object-fit: cover;
+}
