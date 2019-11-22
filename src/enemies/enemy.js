@@ -16,6 +16,10 @@ class Enemy {
     return "enemy";
   }
 
+  considerTurning() {
+    // this method will be used for most enemies, might as well have a default!
+  }
+
   mute() {
     this.muted = true;
   }

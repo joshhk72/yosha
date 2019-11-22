@@ -139,7 +139,7 @@ class FatBird extends Enemy {
   }
 
   selectSprite(ctx, coordinates, size, spritesImg) {
-    // [35, 235] is taken as the default sprite size for fat bird (tis just an estimate...)
+    // [35, 35] is taken as the default sprite size for fat bird (tis just an estimate...)
     const width = CONSTANTS.TILE_SIZE * this.size.x * size[0] / 35;
     const height = CONSTANTS.TILE_SIZE * this.size.y * size[1] / 35;
 
