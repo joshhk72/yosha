@@ -1,4 +1,5 @@
 const Bullet = require('./bullet');
+const Vector = require('../vector');
 
 const CONSTANTS = {
   BULLET_VEL: 0.4,
@@ -11,6 +12,7 @@ class Enemy {
     this.isHit = false; // for small invincibility frame upon being hit (as well as animation)
     this.life = 1; // default, but enemies can have different amounts of lives
     this.reloading = false;
+    this.reloadTime = 3000; // adjust if enemy should shoot faster/slower
     this.frameCount = 0;
     this.tickCount = 0;
     this.muted = false;
@@ -25,16 +27,19 @@ class Enemy {
     return "enemy";
   }
 
-  shoot(state) {
+  shoot(state, extraWidth, extraHeight) {
+    const moreX = extraWidth || 0;
+    const moreY = extraHeight || 0;
+
     if (this.startedMoving && !this.reloading) {
       const direction = state.player.pos.minus(this.pos);
       const bulletVel = CONSTANTS.BULLET_VEL;
-      const bullet = new Bullet(this.pos, direction.scale(bulletVel));
+      const bullet = new Bullet(new Vector(this.pos.x + moreX, this.pos.y + moreY), direction.scale(bulletVel));
       state.actors.push(bullet);
       this.reloading = true;
       setTimeout(() => {
         this.reload();
-      }, 2200);
+      }, this.reloadTime);
     }
   }
 

@@ -2,8 +2,8 @@ const Vector = require('../vector');
 const Enemy = require('./enemy');
 
 const SPRITE_SIZE = {
-  fly1: [46, 25], // this is a guess
-  fly2: [46, 25], // this is a guess
+  fly1: [46, 25],
+  fly2: [46, 25],
   fly3: [44, 23],
   fly4: [22, 23],
   fly5: [22, 23],
@@ -17,8 +17,8 @@ const SPRITE_SIZE = {
 };
 
 const BACK_SPRITE_POS = {
-  fly1: [0, 3], // this is a guess
-  fly2: [46, 3], // this is a guess
+  fly1: [0, 3],
+  fly2: [46, 3],
   fly3: [93, 4],
   fly4: [150, 3],
   fly5: [196, 2],
@@ -68,6 +68,7 @@ class Bat extends Enemy {
     this.backHitSprites.src = './assets/sprites/pixel/enemies/Bat/back-hit.png';
 
     this.char = char;
+    this.reloadTime = 2200; // custom reload time for bats
 
     this.life = 1; // fragile dudes
     this.vel = new Vector(0, 0); // until in viewport, no speed!
@@ -87,7 +88,7 @@ class Bat extends Enemy {
   }
 
   step(timeStep, state) {
-    if (!this.reloading) this.shoot(state);
+    if (!this.reloading) this.shoot(state, 0, 0.04);
     this.handleTurn(state);
     this.handleFrames();
     this.handleMovement(timeStep);

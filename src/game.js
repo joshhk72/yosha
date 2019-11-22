@@ -110,13 +110,22 @@ class Game {
   }
 
   step() {
-    if ((!key.isPressed('left') && !key.isPressed('right')) || (key.isPressed('left') && key.isPressed('right'))) {
-      this.currentLevel.player.moveTo(0);
+    if (key.getScope() === 'main') {
+      if ((!key.isPressed('left') && !key.isPressed('right')) || (key.isPressed('left') && key.isPressed('right'))) {
+        this.currentLevel.player.moveTo(0);
+      }
+      if ((!key.isPressed('up') && !key.isPressed('down')) || (key.isPressed('up') && key.isPressed('down'))) {
+        this.currentLevel.player.lookVertically(0);
+      }
+    } else if (key.getScope() === 'alt') {
+      if ((!key.isPressed('a') && !key.isPressed('d')) || (key.isPressed('a') && key.isPressed('d'))) {
+        this.currentLevel.player.moveTo(0);
+      }
+      if ((!key.isPressed('w') && !key.isPressed('s')) || (key.isPressed('w') && key.isPressed('s'))) {
+        this.currentLevel.player.lookVertically(0);
+      }  
     }
-    if ((!key.isPressed('up') && !key.isPressed('down')) || (key.isPressed('up') && key.isPressed('down'))) {
-      this.currentLevel.player.lookVertically(0);
-    }
-    
+
     if (this.currentLevel.won) { 
       this.won = true;
       this.celebrateWin();
@@ -155,18 +164,15 @@ class Game {
   }
 
   bindKeyHandlers() {
-    key('left', () => { if (this.playing) this.currentLevel.state.player.moveTo(-1) });
-    key('right', () => { if (this.playing) this.currentLevel.state.player.moveTo(1) });
-    key('up', () => {
+    key('left', 'main', () => { if (this.playing) this.currentLevel.state.player.moveTo(-1) });
+    key('right', 'main', () => { if (this.playing) this.currentLevel.state.player.moveTo(1) });
+    key('up', 'main', () => {
       if (!this.playing) return; 
       this.currentLevel.state.player.checkDoor(this.currentLevel.state); 
       this.currentLevel.state.player.lookVertically(1) 
     });
-    key('down', () => { if (this.playing) this.currentLevel.state.player.lookVertically(-1) });
-    key('p', () => this.pause() );
-    key('m', () => this.mute());
-    key('z', () => { if (this.playing) this.currentLevel.state.player.jump() });
-    key('x', () => {
+    key('z', 'main', () => { if (this.playing) this.currentLevel.state.player.jump() });
+    key('x', 'main', () => {
       if (!this.playing) return; 
       if (!key.isPressed("up")) {
         this.currentLevel.state.player.shoot(this.currentLevel.state);
@@ -174,7 +180,29 @@ class Game {
         this.currentLevel.state.player.shootUp(this.currentLevel.state);
       }
     });
-    
+
+    key('a', 'alt', () => { if (this.playing) this.currentLevel.state.player.moveTo(-1) });
+    key('d', 'alt', () => { if (this.playing) this.currentLevel.state.player.moveTo(1) });
+    key('w', 'alt', () => {
+      if (!this.playing) return;
+      this.currentLevel.state.player.checkDoor(this.currentLevel.state);
+      this.currentLevel.state.player.lookVertically(1)
+    });
+    key('l', 'alt', () => { if (this.playing) this.currentLevel.state.player.jump() });
+    key('k', 'alt', () => {
+      if (!this.playing) return;
+      if (!key.isPressed("up")) {
+        this.currentLevel.state.player.shoot(this.currentLevel.state);
+      } else {
+        this.currentLevel.state.player.shootUp(this.currentLevel.state);
+      }
+    });
+
+    // these are global
+    key('p', () => this.pause());
+    key('m', () => this.mute());
+
+    key.setScope('main');
     document.addEventListener("click", this.handleClick, false);
   }
 }
