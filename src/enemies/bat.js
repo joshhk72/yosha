@@ -87,6 +87,7 @@ class Bat extends Enemy {
   }
 
   step(timeStep, state) {
+    if (!this.reloading) this.shoot(state);
     this.handleTurn(state);
     this.handleFrames();
     this.handleMovement(timeStep);

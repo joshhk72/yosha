@@ -140,7 +140,7 @@ class Level {
         actor.step(timeStep, this.state);
 
         // This will remove the eggs that go far out of bounds
-        let isOutside = actor.pos.x < 0 || actor.pos.x > this.width ||
+        let isOutside = actor.pos.x < 0 - 7 || actor.pos.x > this.width + 7 ||
           actor.pos.y < 0 - 3 || actor.pos.y > this.height + 3; // more generous with y bounds
 
         if (isOutside) {
@@ -156,9 +156,28 @@ class Level {
             };
           });
         }
+      } else if (actor.type === "bullet") {
+        actor.step(timeStep, this.state);
+        // This will remove the bullets that go far out of bounds
+        let isOutside = actor.pos.x < 0 - 7 || actor.pos.x > this.width + 7 ||
+          actor.pos.y < 0 - 3 || actor.pos.y > this.height + 3; // more generous with y bounds
+
+        if (isOutside) {
+          this.state.remove(actor);
+        } else {
+          // Check collisions with the player
+          if (this.overlap(actor, this.state.player)) {
+            const xDiff = this.state.player.pos.x - actor.pos.x;
+            const recoilVel = xDiff / Math.abs(xDiff) * 0.3;
+            this.state.remove(actor);
+            this.state.player.getHit(new Vector(recoilVel, 0.1), this.state);
+          }
+        }
       } else if (actor.type === "enemy") {
         actor.step(timeStep, this.state);
         if (actor.life === 0)  this.state.remove(actor); // they ded
+
+
 
         // non-egg or player actors
       } else {

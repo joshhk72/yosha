@@ -1,19 +1,45 @@
+const Bullet = require('./bullet');
+
+const CONSTANTS = {
+  BULLET_VEL: 0.4,
+};
+
 class Enemy {
   constructor(pos, char) {
     this.pos = pos;
     this.char = char;
     this.isHit = false; // for small invincibility frame upon being hit (as well as animation)
     this.life = 1; // default, but enemies can have different amounts of lives
+    this.reloading = false;
     this.frameCount = 0;
     this.tickCount = 0;
     this.muted = false;
     this.hitSound = new Audio('./assets/audio/enemy-hit.wav');
     this.hitSound.volume = 0.5;
     // maxFrames and ticksPerFrame may differ per enemy!
+
+    this.reload = this.reload.bind(this);
   }
   
   get type() {
     return "enemy";
+  }
+
+  shoot(state) {
+    if (!this.reloading) {
+      const direction = state.player.pos.minus(this.pos);
+      const bulletVel = CONSTANTS.BULLET_VEL;
+      const bullet = new Bullet(this.pos, direction.scale(bulletVel));
+      state.actors.push(bullet);
+      this.reloading = true;
+      setTimeout(() => {
+        this.reload();
+      }, 2200);
+    }
+  }
+
+  reload() {
+    this.reloading = false;
   }
 
   startMoving() {

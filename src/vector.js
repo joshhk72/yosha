@@ -19,6 +19,13 @@ class Vector {
   times(factor) {
     return new Vector(this.x * factor, this.y * factor);
   }
+
+  // this gets a unit vector first, then scales it to the factor (perfect for bullets)
+  scale(factor) {
+    const i = this.x / Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2));
+    const j = this.y / Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2));
+    return new Vector(i * factor, j * factor);
+  }
 }
 
 module.exports = Vector;

@@ -24,7 +24,7 @@ class Egg {
     return new Vector(0.5, 0.5);
   }
 
-  handleMovement(timeStep, state) {
+  handleMovement(timeStep) {
     // movement for x-direction
     const xVel = this.vel.x;
     this.pos = this.pos.plus(new Vector(xVel * timeStep, 0));
@@ -37,7 +37,7 @@ class Egg {
     this.vel.y = yVel;
   }
 
-  step(timeStep, state) {
+  step(timeStep) {
     this.handleMovement(timeStep);
   }
 
@@ -51,6 +51,8 @@ class Egg {
       CONSTANTS.WIDTH, CONSTANTS.HEIGHT);
   }
 
+
+  // perhaps in the future, eggs are able to talk as people
   mute() { }
 
   unmute() { }
