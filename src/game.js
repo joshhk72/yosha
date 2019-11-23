@@ -1,7 +1,6 @@
 //const Game = require("./game.js");
 const Level = require("./level.js");
 const StartScreen = require("./start/screen");
-const { GAME_LEVELS, MUSIC_LIST } = require("./levels");
 
 const CONSTANTS = {
   TIME: 0.1,
@@ -46,6 +45,9 @@ class Game {
     if (this.muted) this.currentLevel.mute();
     this.playing = true;
     this.render();
+    setTimeout(() => {
+      document.addEventListener("click", this.handleClick, false);
+    }, 500);
   }
 
   mute() {
@@ -149,11 +151,17 @@ class Game {
     // This function was made when considering a Canvas based game-start UI.
     // But a DOM UI will work just fine (since this app is mostly for use on a browser!)
     // const canvas = document.getElementById("canvas");
-    // const mouseX = e.pageX - canvas.offsetLeft;
-    // const mouseY = e.pageY - canvas.offsetTop;
-    // if (mouseX >= 0 && mouseX <= CONSTANTS.WIDTH && mouseY >= 0 && mouseY <= CONSTANTS.HEIGHT) {
-    //   console.log(mouseX, mouseY); 
-    // }
+    const mouseX = e.pageX - canvas.offsetLeft;
+    const mouseY = e.pageY - canvas.offsetTop;
+    if (mouseX >= 0 && mouseX <= CONSTANTS.WIDTH && mouseY >= 0 && mouseY <= CONSTANTS.HEIGHT) {
+      if (!this.playing) return;
+      if (!key.isPressed("up")) {
+        this.currentLevel.state.player.shoot(this.currentLevel.state);
+      } else {
+        this.currentLevel.state.player.shootUp(this.currentLevel.state);
+      }
+    }
+    
   }
 
   bindClickHandlers() {
@@ -199,11 +207,11 @@ class Game {
     });
 
     // these are global
+    key('space', () => { if (this.playing) this.currentLevel.state.player.jump() });
     key('p', () => this.pause());
     key('m', () => this.mute());
 
     key.setScope('main');
-    document.addEventListener("click", this.handleClick, false);
   }
 }
 

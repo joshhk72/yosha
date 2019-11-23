@@ -28,3 +28,48 @@ header {
   width: 100px;
   object-fit: cover;
 }
+
+footer {
+  background-color: #8fec8f;
+  border: 1px solid green;
+  width: 60%;
+  height: 8em;
+  margin: 3.5em auto;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 0 2em;
+}
+
+#egg-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#egg-container p {
+  text-align: center;
+  margin-bottom: 0.6em;
+}
+
+#footer-canvas {
+  cursor: pointer;
+}
+
+#footer-info {
+  visibility: hidden;
+  margin-left: 8em;
+}
+
+#footer-info span {
+  font-size: 28px;
+  font-family: 'VT323', sans-serif;
+}
+
+#footer-links {
+  font-size: 42px;
+}
+
+#footer-links i:hover {
+  color: gray;
+}

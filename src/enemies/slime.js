@@ -77,7 +77,11 @@ class Slime extends Enemy {
     this.backWalkSprites.src = './assets/sprites/pixel/enemies/Slime/back-walk.png';
     this.frontHitSprites.src = './assets/sprites/pixel/enemies/Slime/front-hit.png';
     this.backHitSprites.src = './assets/sprites/pixel/enemies/Slime/back-hit.png';
-    this.vel = new Vector(-CONSTANTS.X_SPEED, 0);
+    if (char === 's') {
+      this.vel = new Vector(-CONSTANTS.X_SPEED, 0);
+    } else if (char === 'S') {
+      this.vel = new Vector(CONSTANTS.X_SPEED, 0);
+    }
     this.life = 2;
   }
 
@@ -87,12 +91,6 @@ class Slime extends Enemy {
 
   get size() {
     return new Vector(1, 0.625);
-  }
-
-  startMoving() {
-    if (this.isMoving) return;
-    this.isMoving = true;
-    this.vel = new Vector(-CONSTANTS.X_SPEED, 0);
   }
 
   step(timeStep, state) {

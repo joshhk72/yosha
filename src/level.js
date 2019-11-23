@@ -28,6 +28,7 @@ const levelChars = {
   "F": FatBird,
   "<": Bat,
   ">": Bat,
+  "s": Slime,
   "S": Slime,
 };
 
@@ -178,8 +179,6 @@ class Level {
       } else if (actor.type === "enemy") {
         actor.step(timeStep, this.state);
         if (actor.life === 0)  this.state.remove(actor); // they ded
-
-
 
         // non-egg or player actors
       } else {
