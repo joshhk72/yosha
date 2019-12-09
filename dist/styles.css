@@ -227,6 +227,7 @@ canvas {
   color: white;
   padding: 2em 0;
   box-sizing: border-box;
+  font-size: 14px;
 }
 
 #credit-container h1 {

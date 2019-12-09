@@ -113,19 +113,35 @@ class Game {
 
   step() {
     if (key.getScope() === 'main') {
-      if ((!key.isPressed('left') && !key.isPressed('right')) || (key.isPressed('left') && key.isPressed('right'))) {
-        this.currentLevel.player.moveTo(0);
+      if (key.isPressed('up')) {
+        this.currentLevel.state.player.lookVertically(1);
+      } else {
+        this.currentLevel.state.player.lookVertically(0);
       }
-      if ((!key.isPressed('up') && !key.isPressed('down')) || (key.isPressed('up') && key.isPressed('down'))) {
-        this.currentLevel.player.lookVertically(0);
+      if (key.isPressed('left') && key.isPressed('right')) {
+        this.currentLevel.player.moveTo(0);
+      } else if (key.isPressed('left')) {
+        this.currentLevel.player.moveTo(-1);
+      } else if (key.isPressed('right')) {
+        this.currentLevel.player.moveTo(1);
+      } else {
+        this.currentLevel.player.moveTo(0);
       }
     } else if (key.getScope() === 'alt') {
-      if ((!key.isPressed('a') && !key.isPressed('d')) || (key.isPressed('a') && key.isPressed('d'))) {
+      if (key.isPressed('w')) {
+        this.currentLevel.state.player.lookVertically(1);
+      } else {
+        this.currentLevel.state.player.lookVertically(0);
+      }
+      if (key.isPressed('a') && key.isPressed('d')) {
+        this.currentLevel.player.moveTo(0);
+      } else if (key.isPressed('a')) {
+        this.currentLevel.player.moveTo(-1);
+      } else if (key.isPressed('d')) {
+        this.currentLevel.player.moveTo(1);
+      } else {
         this.currentLevel.player.moveTo(0);
       }
-      if ((!key.isPressed('w') && !key.isPressed('s')) || (key.isPressed('w') && key.isPressed('s'))) {
-        this.currentLevel.player.lookVertically(0);
-      }  
     }
 
     if (this.currentLevel.won) { 
@@ -172,12 +188,9 @@ class Game {
   }
 
   bindKeyHandlers() {
-    key('left', 'main', () => { if (this.playing) this.currentLevel.state.player.moveTo(-1) });
-    key('right', 'main', () => { if (this.playing) this.currentLevel.state.player.moveTo(1) });
     key('up', 'main', () => {
       if (!this.playing) return; 
-      this.currentLevel.state.player.checkDoor(this.currentLevel.state); 
-      this.currentLevel.state.player.lookVertically(1) 
+      this.currentLevel.state.player.checkDoor(this.currentLevel.state);
     });
     key('z', 'main', () => { if (this.playing) this.currentLevel.state.player.jump() });
     key('x', 'main', () => {
@@ -189,8 +202,6 @@ class Game {
       }
     });
 
-    key('a', 'alt', () => { if (this.playing) this.currentLevel.state.player.moveTo(-1) });
-    key('d', 'alt', () => { if (this.playing) this.currentLevel.state.player.moveTo(1) });
     key('w', 'alt', () => {
       if (!this.playing) return;
       this.currentLevel.state.player.checkDoor(this.currentLevel.state);
