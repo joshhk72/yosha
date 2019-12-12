@@ -57,6 +57,10 @@ class Game {
       this.currentLevel.mute();
       button.classList.remove("fa-volume-down");
       button.classList.add("fa-volume-mute");
+    } else if (this.paused && this.muted && !this.lost && !this.won) {
+      this.muted = false;
+      button.classList.remove("fa-volume-mute");
+      button.classList.add("fa-volume-down");
     } else if (this.playing && this.muted && !this.lost && !this.won) {
       this.muted = false;
       this.currentLevel.unmute();
