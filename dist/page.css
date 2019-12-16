@@ -1,5 +1,6 @@
 body {
   background-color: #c7d1bd;
+  min-width: 1000px;
 }
 
 header {
@@ -32,13 +33,14 @@ header {
 footer {
   background-color: #8fec8f;
   border: 1px solid green;
-  width: 60%;
-  height: 8em;
-  margin: 3.5em auto;
+  width: 800px;
+  height: 150px;
+  margin: 2.6em auto;
   display: flex;
+  justify-content: space-around;
   align-items: center;
   box-sizing: border-box;
-  padding: 0 2em;
+  padding: 0 40px;
 }
 
 #egg-container {
@@ -62,12 +64,16 @@ footer {
 
 #footer-info {
   visibility: hidden;
-  margin-left: 8em;
+  width: 180px;
 }
 
 #footer-info span {
   font-size: 28px;
   font-family: 'VT323', sans-serif;
+  -webkit-user-select: none; /* Safari */        
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+/Edge */
+  user-select: none; /* Standard */
 }
 
 #footer-links {
@@ -76,4 +82,7 @@ footer {
 
 #footer-links i:hover {
   color: gray;
+}
+
+#keys {
 }

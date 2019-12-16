@@ -27,6 +27,7 @@ class Game {
     this.selectLevel = this.selectLevel.bind(this);
     this.pause = this.pause.bind(this);
     this.mute = this.mute.bind(this);
+    this.stepKeyPress = this.stepKeyPress.bind(this);
 
     // prevent scrolling on window with space or arrow keys!
     window.addEventListener("keydown", function (e) {
@@ -112,10 +113,9 @@ class Game {
   start() {
     this.bindKeyHandlers();
     this.bindClickHandlers();
-    // this.render();
   }
 
-  step() {
+  stepKeyPress() {
     if (key.getScope() === 'main') {
       if (key.isPressed('up')) {
         this.currentLevel.state.player.lookVertically(1);
@@ -147,6 +147,10 @@ class Game {
         this.currentLevel.player.moveTo(0);
       }
     }
+  }
+
+  step() {
+    this.stepKeyPress();
 
     if (this.currentLevel.won) { 
       this.won = true;
